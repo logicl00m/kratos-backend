@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping ("/api/v1/client/private/activity")
+@RequestMapping ("/api/v1/common/private/activity")
 @RequiredArgsConstructor
 public class ActivityResource {
 	

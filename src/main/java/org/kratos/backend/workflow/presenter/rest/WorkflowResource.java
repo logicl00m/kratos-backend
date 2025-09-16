@@ -14,35 +14,35 @@ import org.springframework.web.bind.annotation.RestController;
 public class WorkflowResource {
 	
 	@PostMapping ("/create")
-	public Response<Void> runWorkflow(@RequestHeader ("X-Subject") String userId) {
+	public Response<Void> runWorkflow(@RequestHeader ("X-Subject") String configurationId) {
 		return Response.<Void>builder()
 		               .status(ResponseStatus.ALL_OK)
 		               .build();
 	}
 	
 	@PostMapping ("/update")
-	public Response<Void> updateWorkflow(@RequestHeader ("X-Subject") String userId) {
+	public Response<Void> updateWorkflow(@RequestHeader ("X-Subject") String configurationId) {
 		return Response.<Void>builder()
 		               .status(ResponseStatus.ALL_OK)
 		               .build();
 	}
 	
 	@PostMapping ("/get")
-	public Response<Void> getWorkflow(@RequestHeader ("X-Subject") String userId) {
+	public Response<Void> getWorkflow(@RequestHeader ("X-Subject") String configurationId) {
 		return Response.<Void>builder()
 		               .status(ResponseStatus.ALL_OK)
 		               .build();
 	}
 	
 	@PostMapping ("/get/all")
-	public Response<Void> getAllWorkflows(@RequestHeader ("X-Subject") String userId) {
+	public Response<Void> getAllWorkflows(@RequestHeader ("X-Subject") String configurationId) {
 		return Response.<Void>builder()
 		               .status(ResponseStatus.ALL_OK)
 		               .build();
 	}
 	
-	@PostMapping ("/history")
-	public Response<Void> getHistory(@RequestHeader ("X-Subject") String userId) {
+	@PostMapping ("/get/history")
+	public Response<Void> getWorkflowHistory(@RequestHeader ("X-Subject") String configurationId) {
 		return Response.<Void>builder()
 		               .status(ResponseStatus.ALL_OK)
 		               .build();

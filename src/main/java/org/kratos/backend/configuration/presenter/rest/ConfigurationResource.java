@@ -35,4 +35,18 @@ public class ConfigurationResource {
 		               .build();
 	}
 	
+	@PostMapping ("/get/all")
+	public Response<Void> getAllConfigurations(@RequestHeader ("X-Subject") String userId) {
+		return Response.<Void>builder()
+		               .status(ResponseStatus.ALL_OK)
+		               .build();
+	}
+	
+	@PostMapping ("/delete")
+	public Response<Void> deleteConfiguration(@RequestHeader ("X-Subject") String userId) {
+		return Response.<Void>builder()
+		               .status(ResponseStatus.ALL_OK)
+		               .build();
+	}
+	
 }
