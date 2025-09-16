@@ -14,14 +14,70 @@ java {
   }
 }
 
+configurations {
+  compileOnly {
+    extendsFrom annotationProcessor
+  }
+}
+
 repositories {
   mavenCentral()
+}
+
+ext {
+  set('springCloudVersion', "2025.0.0")
 }
 
 dependencies {
   implementation 'org.springframework.boot:spring-boot-starter-web'
   testImplementation 'org.springframework.boot:spring-boot-starter-test'
   testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+  // =============== web ===============
+  implementation 'org.springframework.boot:spring-boot-starter-web'
+  implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+  // =============== data ===============
+  implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+  runtimeOnly 'org.postgresql:postgresql'
+  implementation 'org.liquibase:liquibase-core'
+
+  // =============== cloud ===============
+  implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+
+  // =============== security ===============
+  implementation 'org.springframework.boot:spring-boot-starter-security'
+  implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+
+  // =============== docs ===============
+  implementation 'org.springdoc:springdoc-openapi-starter-webmvc-api:2.6.0'
+  implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0'
+
+  // =============== ops ===============
+  implementation 'org.springframework.boot:spring-boot-starter-actuator'
+  compileOnly 'org.springframework:spring-aop'
+  compileOnly 'org.aspectj:aspectjweaver'
+
+  // =============== utils ===============
+  compileOnly 'org.projectlombok:lombok'
+  annotationProcessor 'org.projectlombok:lombok'
+
+  implementation 'org.mapstruct:mapstruct:1.5.5.Final'
+  annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
+
+  developmentOnly 'org.springframework.boot:spring-boot-devtools'
+  annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+
+  implementation 'org.jetbrains:annotations:24.0.0'
+  // =============== test ===============
+  testImplementation 'org.springframework.boot:spring-boot-starter-test'
+  testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+dependencyManagement {
+  imports {
+    mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+  }
 }
 
 tasks.named('test') {

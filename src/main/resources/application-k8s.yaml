@@ -1,0 +1,7 @@
+spring:
+  liquibase:
+    contexts: develop
+  jpa:
+    properties:
+      hibernate:
+        default_schema: kratos

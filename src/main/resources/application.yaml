@@ -1,0 +1,16 @@
+server:
+  servlet:
+    context-path: /
+
+spring:
+  profiles:
+    active: dev
+  application:
+    name: kratos-backend
+  datasource:
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    open-in-view: false
+  liquibase:
+    enabled: true
+    change-log: classpath:db/migrations/changelog-master.xml

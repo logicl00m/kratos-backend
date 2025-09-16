@@ -1,0 +1,57 @@
+server:
+  port: 8080
+  url: http://localhost:8080
+
+spring:
+  datasource:
+    username: kratos
+    password: kratos
+    url: jdbc:postgresql://localhost:5432/kratos
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${auth.oauth2.resource-server}/realms/${auth.oauth2.realm}
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        default_schema: kratos
+  liquibase:
+    contexts: develop,dummy
+
+auth:
+  headers:
+    subject: X-Subject
+  oauth2:
+    resource-server: http://localhost:8081
+    realm: kratos
+
+springdoc:
+  swagger-ui:
+    schemes-names:
+      oauth2: oauth2
+      x-subject: x-subject
+    oauth:
+      client-id: kratos-backend-openapi-client
+      realm: kratos
+      use-pkce-with-authorization-code-grant: true
+
+security:
+  paths:
+    public-paths:
+      - /api/v1/*/public/**
+      - /actuator/**
+      - /swagger-ui/**
+      - /v3/api-docs/**
+  cors:
+    allowed-origins:
+      - http://localhost:3000
+    allowed-methods:
+      - OPTIONS
+      - POST
+    allowed-headers:
+      - X-Subject
+      - Authorization
+      - Content-Type
