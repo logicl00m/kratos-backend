@@ -22,14 +22,14 @@ public class ConfigurationResource {
 	}
 	
 	@PostMapping ("/update")
-	public Response<Void> updateConfiguration(@RequestHeader ("X-Subject") String userId) {
+	public Response<Void> updateConfiguration(@RequestHeader ("X-Subject") String workflowId) {
 		return Response.<Void>builder()
 		               .status(ResponseStatus.ALL_OK)
 		               .build();
 	}
 	
 	@PostMapping ("/get")
-	public Response<Void> getConfiguration(@RequestHeader ("X-Subject") String userId) {
+	public Response<Void> getConfiguration(@RequestHeader ("X-Subject") String workflowId) {
 		return Response.<Void>builder()
 		               .status(ResponseStatus.ALL_OK)
 		               .build();
@@ -43,7 +43,7 @@ public class ConfigurationResource {
 	}
 	
 	@PostMapping ("/delete")
-	public Response<Void> deleteConfiguration(@RequestHeader ("X-Subject") String userId) {
+	public Response<Void> deleteConfiguration(@RequestHeader ("X-Subject") String configurationId) {
 		return Response.<Void>builder()
 		               .status(ResponseStatus.ALL_OK)
 		               .build();

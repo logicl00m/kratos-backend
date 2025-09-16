@@ -54,7 +54,7 @@ public class ResourceOperationAuthorizationManager implements AuthorizationManag
 	}
 	
 	private ResourceOperationScope getResourceOperation(HttpServletRequest request) {
-		// current pattern is /api/{version}/{scope}/private/{resource}/{operation}
+		// current pattern is /api/{version}/{scope}/{access-level}/{resource}/{operation}
 		
 		String path = request.getRequestURI();
 		String[] pathElements = path.split("/");
