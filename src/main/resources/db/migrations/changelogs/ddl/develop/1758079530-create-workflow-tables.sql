@@ -62,27 +62,19 @@ create table if not exists kratos.workflow_field_permissions
 );
 
 -- changeset Abbiirr:1758079530-5
--- workflow roles
-create table if not exists kratos.workflow_roles
-(
-    id      uuid default uuid_generate_v4() not null primary key,
-    wf_role varchar(255)                    not null
-);
-
--- changeset Abbiirr:1758079530-6
 -- configuration state permission roles
 create table if not exists kratos.workflow_state_permission_roles
 (
-    wf_role_id             uuid not null references kratos.workflow_roles (id),
+    wf_role_id             uuid not null references kratos.app_roles (id),
     wf_state_permission_id uuid not null references kratos.workflow_state_permissions (id),
     constraint pk_wf_state_permission_roles primary key (wf_role_id, wf_state_permission_id)
 );
 
--- changeset Abbiirr:1758079530-7
+-- changeset Abbiirr:1758079530-6
 -- configuration state field permission roles
 create table if not exists kratos.workflow_field_permission_roles
 (
-    wf_role_id             uuid not null references kratos.workflow_roles (id),
+    wf_role_id             uuid not null references kratos.app_roles (id),
     wf_field_permission_id uuid not null references kratos.workflow_field_permissions (id),
     constraint pk_wf_field_permission_roles primary key (wf_role_id, wf_field_permission_id)
 );

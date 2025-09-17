@@ -15,35 +15,37 @@ public class WorkflowResource {
 	
 	// fixme(high): fix dtos here
 	@PostMapping ("/create")
-	public Response<Void> runWorkflow(@RequestHeader ("X-Subject") String wfConfigId) {
+	public Response<Void> run(@RequestHeader ("X-Subject") String wfConfigId
+ 
+	) {
 		return Response.<Void>builder()
 		               .status(ResponseStatus.ALL_OK)
 		               .build();
 	}
 	
 	@PostMapping ("/update")
-	public Response<Void> updateWorkflow(@RequestHeader ("X-Subject") String wfConfigId) {
+	public Response<Void> update(@RequestHeader ("X-Subject") String wfConfigId) {
 		return Response.<Void>builder()
 		               .status(ResponseStatus.ALL_OK)
 		               .build();
 	}
 	
 	@PostMapping ("/get")
-	public Response<Void> getWorkflow(@RequestHeader ("X-Subject") String wfConfigId) {
+	public Response<Void> get(@RequestHeader ("X-Subject") String wfConfigId) {
 		return Response.<Void>builder()
 		               .status(ResponseStatus.ALL_OK)
 		               .build();
 	}
 	
 	@PostMapping ("/get/all")
-	public Response<Void> getAllWorkflows(@RequestHeader ("X-Subject") String wfConfigId) {
+	public Response<Void> getAll(@RequestHeader ("X-Subject") String wfConfigId) {
 		return Response.<Void>builder()
 		               .status(ResponseStatus.ALL_OK)
 		               .build();
 	}
 	
 	@PostMapping ("/get/history")
-	public Response<Void> getWorkflowHistory(@RequestHeader ("X-Subject") String wfConfigId) {
+	public Response<Void> getHistory(@RequestHeader ("X-Subject") String wfConfigId) {
 		return Response.<Void>builder()
 		               .status(ResponseStatus.ALL_OK)
 		               .build();
