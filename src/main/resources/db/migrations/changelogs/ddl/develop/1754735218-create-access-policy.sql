@@ -2,7 +2,7 @@
 
 -- changeset Noman5237:1754735218-1
 -- app roles
-create table kratos.app_roles
+create table if not exists kratos.app_roles
 (
     id            uuid    default uuid_generate_v4() not null
         primary key,
@@ -12,7 +12,7 @@ create table kratos.app_roles
 
 -- changeset Noman5237:1754735218-2
 -- resource operations
-create table kratos.resource_operations
+create table if not exists kratos.resource_operations
 (
     id                  uuid default uuid_generate_v4() not null
         primary key,
@@ -26,7 +26,7 @@ create table kratos.resource_operations
 
 -- changeset Noman5237:1754735218-3
 -- resource roles
-create table kratos.resource_roles
+create table if not exists kratos.resource_roles
 (
     app_role_id           uuid not null
         references kratos.app_roles,
@@ -38,7 +38,7 @@ create table kratos.resource_roles
 
 -- changeset Noman5237:1754735218-4
 -- subject roles
-create table kratos.subject_roles
+create table if not exists kratos.subject_roles
 (
     user_id  varchar(36)          not null,
     subject  uuid                 not null,
