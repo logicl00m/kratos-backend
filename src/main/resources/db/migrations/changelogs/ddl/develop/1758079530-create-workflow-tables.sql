@@ -1,122 +1,88 @@
-create table if not exists workflow_permissions_matrix (
-    permission_id    BIGSERIAL PRIMARY KEY,
-    state            VARCHAR(100) NOT NULL,
-    action           VARCHAR(100) NOT NULL,
-    role             VARCHAR(100) NOT NULL,
-    created_by       VARCHAR(100) DEFAULT CURRENT_USER,
-    created_at       TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    updated_by       VARCHAR(100) DEFAULT CURRENT_USER,
-    updated_at       TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    is_active        BOOLEAN NOT NULL DEFAULT TRUE
+-- liquibase formatted sql
+
+-- changeset Abbiirr:1758079530-1
+-- workflow configurations
+create table if not exists kratos.workflow_configurations
+(
+    id         uuid                  default uuid_generate_v4() not null primary key,
+    config     jsonb        not null,
+
+    created_by varchar(255) not null,
+    updated_by varchar(255) not null,
+
+    created_at timestamptz  not null default now(),
+    updated_at timestamptz  not null default now(),
+
+    is_active  boolean      not null default true
 );
 
+-- changeset Abbiirr:1758079530-2
+-- workflow runs
+create table if not exists kratos.workflows
+(
+    id           uuid                  default uuid_generate_v4() not null primary key,
+    wf_config_id uuid         not null references kratos.workflow_configurations (id),
+    data         jsonb        not null,
+    state        varchar(255) not null,
 
+    created_by   varchar(100) not null,
+    updated_by   varchar(100) not null,
 
+    created_at   timestamptz  not null default now(),
+    updated_at   timestamptz  not null default now(),
 
-create table if not exists kratos.field_permission_matrix (
-    field_id         BIGSERIAL PRIMARY KEY,
-    field_name       VARCHAR(100) NOT NULL,
-    state            VARCHAR(100) NOT NULL,
-    field_action     VARCHAR(100) NOT NULL,
-    role             VARCHAR(100) NOT NULL,
-    created_by       VARCHAR(100) DEFAULT CURRENT_USER,
-    created_at       TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    updated_by       VARCHAR(100) DEFAULT CURRENT_USER,
-    updated_at       TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    is_active        BOOLEAN NOT NULL DEFAULT TRUE
+    is_active    boolean      not null default true
 );
 
-create table if not exists kratos.workflow_configuration (
-    workflow_config_id BIGSERIAL PRIMARY KEY,
-    config_json        JSONB NOT NULL,
-    created_by         VARCHAR(100) DEFAULT CURRENT_USER,
-    created_at         TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    updated_by         VARCHAR(100) DEFAULT CURRENT_USER,
-    updated_at         TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    is_active          BOOLEAN NOT NULL DEFAULT TRUE
+-- changeset Abbiirr:1758079530-3
+-- configuration state permissions
+create table if not exists kratos.workflow_state_permissions
+(
+    id           uuid                  default uuid_generate_v4() not null primary key,
+    wf_config_id uuid         not null references workflow_configurations (id),
+    state        varchar(255) not null,
+    action       varchar(255) not null,
+
+    created_at   timestamptz  not null default now(),
+    updated_at   timestamptz  not null default now()
 );
 
-create table if not exists kratos.workflows (
-    workflow_id        BIGSERIAL PRIMARY KEY,
-    workflow_config_id BIGINT NOT NULL,
-    status             VARCHAR(50) NOT NULL,
-    created_by         VARCHAR(100) DEFAULT CURRENT_USER,
-    created_at         TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    updated_by         VARCHAR(100) DEFAULT CURRENT_USER,
-    updated_at         TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    is_active          BOOLEAN NOT NULL DEFAULT TRUE,
-    FOREIGN KEY (workflow_config_id) REFERENCES kratos.workflow_configuration(workflow_config_id)
+-- changeset Abbiirr:1758079530-4
+-- configuration state field permissions
+create table if not exists kratos.workflow_field_permissions
+(
+    id           uuid                  default uuid_generate_v4() not null primary key,
+    wf_config_id uuid         not null references kratos.workflow_configurations (id),
+    state        varchar(255) not null,
+    field        varchar(255) not null,
+    action       varchar(255) not null,
+
+    created_at   timestamptz  not null default now(),
+    updated_at   timestamptz  not null default now()
 );
 
-create table if not exists kratos.employees (
-    id             BIGSERIAL PRIMARY KEY,
-    employee_id    VARCHAR(100) NOT NULL UNIQUE,
-    role           VARCHAR(100) NOT NULL,
-    name           VARCHAR(200) NOT NULL,
-    manager        BIGINT,
-    department     VARCHAR(100) NOT NULL,
-    created_by     VARCHAR(100) DEFAULT CURRENT_USER,
-    created_at     TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    updated_by     VARCHAR(100) DEFAULT CURRENT_USER,
-    updated_at     TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    is_active      BOOLEAN NOT NULL DEFAULT TRUE,
-    FOREIGN KEY (manager) REFERENCES employees(id)
+-- changeset Abbiirr:1758079530-5
+-- workflow roles
+create table if not exists kratos.workflow_roles
+(
+    id      uuid default uuid_generate_v4() not null primary key,
+    wf_role varchar(255)                    not null
 );
 
-create table if not exists kratos.workflow_assignee (
-    id                 BIGSERIAL PRIMARY KEY,
-    workflow_id        BIGINT NOT NULL,
-    permission_id      BIGINT NOT NULL,
-    assignee           VARCHAR(100) NOT NULL,
-    created_by         VARCHAR(100) DEFAULT CURRENT_USER,
-    created_at         TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    updated_by         VARCHAR(100) DEFAULT CURRENT_USER,
-    updated_at         TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    is_active          BOOLEAN NOT NULL DEFAULT TRUE,
-    FOREIGN KEY (permission_id) REFERENCES kratos.workflow_permissions_matrix(permission_id),
-    FOREIGN KEY (workflow_id) REFERENCES kratos.workflows(workflow_id),
-    FOREIGN KEY (assignee) REFERENCES kratos.employees(employee_id),
-    UNIQUE (workflow_id, permission_id, assignee)
+-- changeset Abbiirr:1758079530-6
+-- configuration state permission roles
+create table if not exists kratos.workflow_state_permission_roles
+(
+    wf_role_id             uuid not null references kratos.workflow_roles (id),
+    wf_state_permission_id uuid not null references kratos.workflow_state_permissions (id),
+    constraint pk_wf_state_permission_roles primary key (wf_role_id, wf_state_permission_id)
 );
 
-
--- 1. INDEXES ON FOREIGN KEY COLUMNS
-
--- workflow_assignee.workflow_id
-CREATE INDEX idx_workflow_assignee_workflow_id
-    ON kratos.workflow_assignee (workflow_id);
-
--- workflow_assignee.permission_id
-CREATE INDEX idx_workflow_assignee_permission_id
-    ON kratos.workflow_assignee (permission_id);
-
--- workflow_assignee.assignee (references employees.employee_id)
-CREATE INDEX idx_workflow_assignee_assignee
-    ON kratos.workflow_assignee (assignee);
-
--- workflows.workflow_config_id
-CREATE INDEX idx_workflows_workflow_config_id
-    ON kratos.workflows (workflow_config_id);
-
--- employees.manager (self-reference)
-CREATE INDEX idx_employees_manager
-    ON kratos.employees (manager);
-
--- You could also consider indexing employees.department if commonly used in filters:
-CREATE INDEX idx_employees_department
-    ON kratos.employees (department);
-
-
--- 2. INDEXES ON AUDIT TIMESTAMPS (OPTIONAL, USAGE DEPENDENT)
-
--- workflow_assignee.created_at
-CREATE INDEX idx_workflow_assignee_created_at
-    ON kratos.workflow_assignee (created_at);
-
--- workflows.updated_at
-CREATE INDEX idx_workflows_updated_at
-    ON kratos.workflows (updated_at);
-
--- employees.is_active (especially if frequently filtering active employees)
-CREATE INDEX idx_employees_is_active
-    ON kratos.employees (is_active);
+-- changeset Abbiirr:1758079530-7
+-- configuration state field permission roles
+create table if not exists kratos.workflow_field_permission_roles
+(
+    wf_role_id             uuid not null references kratos.workflow_roles (id),
+    wf_field_permission_id uuid not null references kratos.workflow_field_permissions (id),
+    constraint pk_wf_field_permission_roles primary key (wf_role_id, wf_field_permission_id)
+);

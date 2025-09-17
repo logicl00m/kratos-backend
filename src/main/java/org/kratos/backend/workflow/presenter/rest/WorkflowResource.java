@@ -13,36 +13,37 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class WorkflowResource {
 	
+	// fixme(high): fix dtos here
 	@PostMapping ("/create")
-	public Response<Void> runWorkflow(@RequestHeader ("X-Subject") String configurationId) {
+	public Response<Void> runWorkflow(@RequestHeader ("X-Subject") String wfConfigId) {
 		return Response.<Void>builder()
 		               .status(ResponseStatus.ALL_OK)
 		               .build();
 	}
 	
 	@PostMapping ("/update")
-	public Response<Void> updateWorkflow(@RequestHeader ("X-Subject") String configurationId) {
+	public Response<Void> updateWorkflow(@RequestHeader ("X-Subject") String wfConfigId) {
 		return Response.<Void>builder()
 		               .status(ResponseStatus.ALL_OK)
 		               .build();
 	}
 	
 	@PostMapping ("/get")
-	public Response<Void> getWorkflow(@RequestHeader ("X-Subject") String configurationId) {
+	public Response<Void> getWorkflow(@RequestHeader ("X-Subject") String wfConfigId) {
 		return Response.<Void>builder()
 		               .status(ResponseStatus.ALL_OK)
 		               .build();
 	}
 	
 	@PostMapping ("/get/all")
-	public Response<Void> getAllWorkflows(@RequestHeader ("X-Subject") String configurationId) {
+	public Response<Void> getAllWorkflows(@RequestHeader ("X-Subject") String wfConfigId) {
 		return Response.<Void>builder()
 		               .status(ResponseStatus.ALL_OK)
 		               .build();
 	}
 	
 	@PostMapping ("/get/history")
-	public Response<Void> getWorkflowHistory(@RequestHeader ("X-Subject") String configurationId) {
+	public Response<Void> getWorkflowHistory(@RequestHeader ("X-Subject") String wfConfigId) {
 		return Response.<Void>builder()
 		               .status(ResponseStatus.ALL_OK)
 		               .build();

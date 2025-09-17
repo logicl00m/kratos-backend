@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ActivityResource {
 	
 	@PostMapping ("/add")
-	public Response<Void> runWorkflow(@RequestHeader ("X-Subject") String userId) {
+	public Response<Void> addActivity(@RequestHeader ("X-Subject") String userId) {
 		return Response.<Void>builder()
 		               .status(ResponseStatus.ALL_OK)
 		               .build();
