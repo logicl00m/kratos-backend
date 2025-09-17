@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class WorkflowResource {
 	
-	// fixme(high): fix dtos here
+	// fixme(high): fix dto here
 	@PostMapping ("/create")
 	public Response<Void> run(@RequestHeader ("X-Subject") String wfConfigId
  
