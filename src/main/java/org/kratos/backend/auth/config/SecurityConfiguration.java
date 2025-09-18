@@ -33,7 +33,7 @@ public class SecurityConfiguration {
 					                       List<String> publicPaths = securityConfigurationProperties.getPaths()
 					                                                                                 .getPublicPaths();
 					                       log.info("allowing the public paths: {}", publicPaths);
-										   
+					                       
 					                       publicPaths
 							                       .forEach(path -> auth.requestMatchers(path)
 							                                            .permitAll());

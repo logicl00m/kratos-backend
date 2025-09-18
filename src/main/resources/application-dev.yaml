@@ -5,8 +5,8 @@ server:
 spring:
   datasource:
     username: kratos
-    password: kratos
-    url: jdbc:postgresql://localhost:5432/kratos
+    password: hsN5y0QdunWb8eqMtccGKrHf8jCdCdtggYjF6XX9e6jaenvl44Ch4VKRab7C2kMk
+    url: jdbc:postgresql://172.16.231.137:31110/kratos
   security:
     oauth2:
       resourceserver:
