@@ -5,6 +5,6 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.27.xsd">
 
-    <includeAll path="db/migrations/changelogs/ddl/develop" context="develop" errorIfMissingOrEmpty="false"/>
-    <includeAll path="db/migrations/changelogs/dml/develop" context="develop" errorIfMissingOrEmpty="false"/>
+    <includeAll path="classpath:db/migrations/changelogs/ddl/develop" context="develop" errorIfMissingOrEmpty="false"/>
+    <includeAll path="classpath:db/migrations/changelogs/dml/develop" context="develop" errorIfMissingOrEmpty="false"/>
 </databaseChangeLog>
