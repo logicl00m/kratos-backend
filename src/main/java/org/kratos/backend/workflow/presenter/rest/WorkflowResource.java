@@ -15,9 +15,7 @@ public class WorkflowResource {
 	
 	// fixme(high): fix dto here
 	@PostMapping ("/create")
-	public Response<Void> run(@RequestHeader ("X-Subject") String wfConfigId
- 
-	) {
+	public Response<Void> run(@RequestHeader ("X-Subject") String wfConfigId) {
 		return Response.<Void>builder()
 		               .status(ResponseStatus.ALL_OK)
 		               .build();

@@ -78,3 +78,8 @@ create table if not exists kratos.workflow_field_permission_roles
     wf_field_permission_id uuid not null references kratos.workflow_field_permissions (id),
     constraint pk_wf_field_permission_roles primary key (wf_role_id, wf_field_permission_id)
 );
+
+-- changeset Abbiirr:1758079530-7
+-- workflow field permissions action to marker
+alter table kratos.workflow_field_permissions
+    rename action to marker;
