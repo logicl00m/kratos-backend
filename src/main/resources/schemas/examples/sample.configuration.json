@@ -1,0 +1,22 @@
+{
+  "id": "user-onboarding-workflow",
+  "version": "1",
+  "forms": {
+    "personalInfo": {
+      "fields": {
+        "firstName": {
+          "name": "First Name",
+          "data": "{{ data.personal.firstName }}",
+          "type": "text",
+          "actions": [
+            "validate",
+            "save"
+          ],
+          "spec": {
+            "placeholder": "Enter your first name"
+          }
+        }
+      }
+    }
+  }
+}

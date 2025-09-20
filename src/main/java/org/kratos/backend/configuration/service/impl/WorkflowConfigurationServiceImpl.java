@@ -1,5 +1,6 @@
 package org.kratos.backend.configuration.service.impl;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.kratos.backend.common.dtos.PaginatedResponse;
 import org.kratos.backend.configuration.dto.WorkflowConfigurationRequest;
@@ -15,7 +16,7 @@ import java.util.UUID;
 public class WorkflowConfigurationServiceImpl implements WorkflowConfigurationService {
 	
 	@Override
-	public WorkflowConfigurationResponse create(String userId, WorkflowConfigurationRequest wfConfig) {
+	public WorkflowConfigurationResponse create(String userId, @Valid WorkflowConfigurationRequest wfConfig) {
 		//do validation on config
 		
 		//add metadata, created by etc,
@@ -27,7 +28,7 @@ public class WorkflowConfigurationServiceImpl implements WorkflowConfigurationSe
 	}
 	
 	@Override
-	public WorkflowConfigurationResponse update(UUID wfConfigId, WorkflowConfigurationRequest wfConfig) {
+	public WorkflowConfigurationResponse update(UUID wfConfigId, @Valid WorkflowConfigurationRequest wfConfig) {
 		//check if config exists
 		
 		//validate the update request

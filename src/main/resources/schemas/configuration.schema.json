@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kratos-api.local.fintech23.xyz/api/v1/common/public/configuration/get/configuration.schema.json",
+  "title": "configuration",
+  "description": "scheme to define workflow configuration",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "id of the workflow"
+    },
+    "version": {
+      "type": "string",
+      "description": "version of the workflow"
+    },
+    "forms": {
+      "description": "forms to be used in the workflow",
+      "additionalProperties": {
+        "$ref": "form/form.schema.json"
+      }
+    },
+    "additionalProperties": false,
+    "required": [
+      "forms"
+    ]
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kratos-api.local.fintech23.xyz/api/v1/common/public/configuration/get/form/form.schema.json",
+  "title": "form",
+  "type": "object",
+  "description": "schema to define form",
+  "properties": {
+    "fields": {
+      "type": "object",
+      "description": "Key-value mapping of fieldId → field definition",
+      "additionalProperties": {
+        "$ref": "field.schema.json"
+      }
+    }
+  },
+  "required": [
+    "fields"
+  ],
+  "additionalProperties": false
+}

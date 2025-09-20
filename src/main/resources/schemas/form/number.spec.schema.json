@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kratos-api.local.fintech23.xyz/api/v1/common/public/configuration/get/form/number.spec.schema.json",
+  "title": "number field",
+  "type": "object",
+  "description": "schema to define form number field",
+  "properties": {
+    "placeholder": {
+      "type": "string"
+    },
+    "min": {
+      "type": "number"
+    },
+    "max": {
+      "type": "number"
+    }
+  },
+  "additionalProperties": false
+}

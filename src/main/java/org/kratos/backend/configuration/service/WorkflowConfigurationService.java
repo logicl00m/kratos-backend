@@ -1,5 +1,6 @@
 package org.kratos.backend.configuration.service;
 
+import jakarta.validation.Valid;
 import org.kratos.backend.common.dtos.PaginatedResponse;
 import org.kratos.backend.configuration.dto.WorkflowConfigurationRequest;
 import org.kratos.backend.configuration.dto.WorkflowConfigurationResponse;
@@ -9,9 +10,9 @@ import java.util.UUID;
 
 public interface WorkflowConfigurationService {
 	
-	WorkflowConfigurationResponse create(String userId, WorkflowConfigurationRequest data);
+	WorkflowConfigurationResponse create(String userId, @Valid WorkflowConfigurationRequest wfConfig);
 	
-	WorkflowConfigurationResponse update(UUID wfConfigId, WorkflowConfigurationRequest data);
+	WorkflowConfigurationResponse update(UUID wfConfigId, @Valid WorkflowConfigurationRequest wfConfig);
 	
 	WorkflowConfigurationResponse get(UUID wfConfigId);
 	

@@ -1,0 +1,6 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kratos-api.local.fintech23.xyz/api/v1/common/public/configuration/get/state.schema.json",
+  "title": "state",
+  "description": "scheme to define workflow state"
+}

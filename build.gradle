@@ -41,6 +41,7 @@ dependencies {
   implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
   runtimeOnly 'org.postgresql:postgresql'
   implementation 'org.liquibase:liquibase-core'
+  implementation 'com.networknt:json-schema-validator:1.5.9'
 
   // =============== cloud ===============
   implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
