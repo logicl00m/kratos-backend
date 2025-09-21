@@ -79,6 +79,15 @@ public class WorkflowConfigurationServiceImpl implements WorkflowConfigurationSe
 	}
 	
 	@Override
+	public WorkflowConfiguration getEntity(UUID wfConfigId) {
+		return wfConfigRepository.findById(wfConfigId)
+		                         .orElseThrow(() -> BaseException.builder()
+		                                                         .responseStatus(
+				                                                         WF_CONFIG_NOT_FOUND)
+		                                                         .build());
+	}
+	
+	@Override
 	public PaginatedResponse<List<WorkflowConfigurationResponse>> getAll(String userId, PaginationRequest page) {
 		Pageable pageable = PageRequest.of(page.number(), page.size());
 		Page<WorkflowConfiguration> configurations = wfConfigRepository.findConfigurationsByUserId(userId, pageable);

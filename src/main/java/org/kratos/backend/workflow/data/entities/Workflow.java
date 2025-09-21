@@ -3,16 +3,11 @@ package org.kratos.backend.workflow.data.entities;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.Getter;
-import lombok.Setter;
-import org.hibernate.annotations.Generated;
+import lombok.*;
 import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.annotations.UpdateTimestamp;
-import org.hibernate.generator.EventType;
 import org.hibernate.type.SqlTypes;
 import org.kratos.backend.configuration.data.entities.WorkflowConfiguration;
 
-import java.time.ZonedDateTime;
 import java.util.Map;
 import java.util.UUID;
 

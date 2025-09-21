@@ -1,5 +1,6 @@
 package org.kratos.backend.configuration.data.entities;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.*;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
@@ -9,6 +10,7 @@ import lombok.Setter;
 import org.hibernate.annotations.*;
 import org.hibernate.generator.EventType;
 import org.hibernate.type.SqlTypes;
+import org.kratos.backend.configuration.dto.ParsedWorkflowConfiguration;
 
 import java.time.ZonedDateTime;
 import java.util.Map;
@@ -55,4 +57,10 @@ public class WorkflowConfiguration {
 	@NotNull
 	@Column (name = "is_deleted", nullable = false)
 	private Boolean isDeleted = false;
+	
+	@Transient
+	public ParsedWorkflowConfiguration parsed() {
+		return new ObjectMapper().convertValue(config, ParsedWorkflowConfiguration.class);
+	}
+	
 }

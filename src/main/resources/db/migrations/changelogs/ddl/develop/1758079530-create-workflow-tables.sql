@@ -114,3 +114,8 @@ alter table kratos.workflows
     drop column created_by;
 alter table kratos.workflows
     drop column updated_by;
+
+-- changeset Noman5237:1758079530-13
+-- dropping is active column
+alter table kratos.workflows
+    drop column is_active;

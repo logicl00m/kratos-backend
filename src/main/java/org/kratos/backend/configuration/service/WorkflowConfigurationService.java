@@ -3,6 +3,7 @@ package org.kratos.backend.configuration.service;
 import jakarta.validation.Valid;
 import org.kratos.backend.common.dtos.PaginatedResponse;
 import org.kratos.backend.common.dtos.PaginationRequest;
+import org.kratos.backend.configuration.data.entities.WorkflowConfiguration;
 import org.kratos.backend.configuration.dto.WorkflowConfigurationRequest;
 import org.kratos.backend.configuration.dto.WorkflowConfigurationResponse;
 
@@ -17,6 +18,8 @@ public interface WorkflowConfigurationService {
 	WorkflowConfigurationResponse update(UUID wfConfigId, @Valid WorkflowConfigurationRequest wfConfig, String subject);
 	
 	WorkflowConfigurationResponse get(UUID wfConfigId);
+	
+	WorkflowConfiguration getEntity(UUID wfConfigId);
 	
 	PaginatedResponse<List<WorkflowConfigurationResponse>> getAll(String userId, PaginationRequest page);
 	

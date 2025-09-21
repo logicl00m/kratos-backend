@@ -7,14 +7,15 @@ import org.kratos.backend.workflow.dto.WorkflowResponse;
 import org.kratos.backend.workflow.dto.WorkflowUpdateRequest;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface WorkflowService {
 	
-	WorkflowResponse create(String wfConfigId);
+	WorkflowResponse create(UUID wfConfigId, String subject);
 	
-	WorkflowResponse update(String wfConfigId, @Valid WorkflowUpdateRequest workflowUpdateRequest);
+	WorkflowResponse update(UUID wfConfigId, @Valid WorkflowUpdateRequest workflowUpdateRequest);
 	
 	WorkflowResponse get(@Valid Request<String> workflowId);
 	
-	PaginatedResponse<List<WorkflowResponse>> getAll(String wfConfigId);
+	PaginatedResponse<List<WorkflowResponse>> getAll(UUID wfConfigId);
 }

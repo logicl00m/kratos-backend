@@ -30,7 +30,7 @@
       "additionalProperties": {
         "$ref": "#/$defs/state"
       },
-      "minProperties": 1,
+      "minProperties": 2,
       "required": [
         "initialState"
       ]
