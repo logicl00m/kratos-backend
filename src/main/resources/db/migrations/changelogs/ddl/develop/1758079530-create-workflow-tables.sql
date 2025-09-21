@@ -83,3 +83,18 @@ create table if not exists kratos.workflow_field_permission_roles
 -- workflow field permissions action to marker
 alter table kratos.workflow_field_permissions
     rename action to marker;
+
+-- changeset Noman5237:1758079530-8
+-- update workflow created_by column size
+alter table kratos.workflows
+    alter column created_by type varchar(255);
+
+-- changeset Noman5237:1758079530-9
+-- update workflow updated_by column size
+alter table kratos.workflows
+    alter column updated_by type varchar(255);
+
+-- changeset Noman5237:1758079530-10
+-- create is deleted row for workflow configuration
+alter table kratos.workflow_configurations
+    add is_deleted bool not null default false;

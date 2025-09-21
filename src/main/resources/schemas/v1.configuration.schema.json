@@ -66,7 +66,10 @@
           "type": "string"
         }
       },
-      "additionalProperties": false
+      "additionalProperties": false,
+      "required": [
+        "placeholder"
+      ]
     },
     "number.field.spec": {
       "title": "number field",
@@ -83,7 +86,10 @@
           "type": "number"
         }
       },
-      "additionalProperties": false
+      "additionalProperties": false,
+      "required": [
+        "placeholder"
+      ]
     },
     "simple.action.spec": {
       "title": "action",
@@ -152,9 +158,6 @@
       "description": "schema to define switch state",
       "properties": {
         "expression": {
-          "type": "string"
-        },
-        "validation": {
           "type": "string"
         },
         "operation": {
