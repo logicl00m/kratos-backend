@@ -1,9 +1,14 @@
 package org.kratos.backend.configuration.dto;
 
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import org.kratos.backend.common.validators.ValidJsonSchema;
 
-// fixme(low): add custom validation for the config using config schema
+import java.util.Map;
+
 public record WorkflowConfigurationRequest(
-		@NotBlank (message = "config must not be blank") String config) {
+		@NotNull
+		@ValidJsonSchema (schema = "/schemas/configuration.schema.json")
+		Map<String, Object> config
+) {
 	
 }

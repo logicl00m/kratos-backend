@@ -7,7 +7,7 @@
         "firstName": {
           "name": "First Name",
           "data": "{{ data.personal.firstName }}",
-          "type": "text",
+          "kind": "text",
           "actions": [
             "validate",
             "save"
