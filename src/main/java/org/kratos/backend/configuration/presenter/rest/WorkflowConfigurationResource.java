@@ -16,13 +16,13 @@ import java.util.Map;
 import java.util.UUID;
 
 @RestController
-@RequestMapping ("/api")
+@RequestMapping ("/api/v1")
 @RequiredArgsConstructor
 public class WorkflowConfigurationResource {
 	
 	private final WorkflowConfigurationServiceImpl wfConfigService;
 	
-	@PostMapping ("/v1/client/private/configuration/create")
+	@PostMapping ("/client/private/configuration/create")
 	public Response<WorkflowConfigurationResponse> create(@RequestHeader ("X-Subject") String userId,
 	                                                      @Valid @RequestBody Request<WorkflowConfigurationRequest> request) {
 		return Response.<WorkflowConfigurationResponse>builder()
@@ -31,7 +31,7 @@ public class WorkflowConfigurationResource {
 		               .build();
 	}
 	
-	@PostMapping ("/v1/client/private/configuration/update")
+	@PostMapping ("/client/private/configuration/update")
 	public Response<WorkflowConfigurationResponse> update(@RequestHeader ("X-Subject") UUID wfConfigId,
 	                                                      @Valid @RequestBody Request<WorkflowConfigurationRequest> request,
 	                                                      @AuthenticationPrincipal Jwt jwt
@@ -42,7 +42,7 @@ public class WorkflowConfigurationResource {
 		               .build();
 	}
 	
-	@PostMapping ("/v1/client/private/configuration/get")
+	@PostMapping ("/client/private/configuration/get")
 	public Response<WorkflowConfigurationResponse> get(@RequestHeader ("X-Subject") UUID wfConfigId) {
 		return Response.<WorkflowConfigurationResponse>builder()
 		               .status(ResponseStatus.ALL_OK)
@@ -50,7 +50,7 @@ public class WorkflowConfigurationResource {
 		               .build();
 	}
 	
-	@PostMapping ("/{version}/client/public/configuration/get/schema")
+	@PostMapping ("/client/public/configuration/{version}/get/schema")
 	public Response<Map<String, Object>> getSchema(@PathVariable String version) {
 		return Response.<Map<String, Object>>builder()
 		               .status(ResponseStatus.ALL_OK)
@@ -58,7 +58,7 @@ public class WorkflowConfigurationResource {
 		               .build();
 	}
 	
-	@PostMapping ("/v1/common/private/configuration/get/all")
+	@PostMapping ("/common/private/configuration/get/all")
 	public Response<List<WorkflowConfigurationResponse>> getAll(@RequestHeader ("X-Subject") String userId,
 	                                                            @Valid @RequestBody PaginatedRequest<Void> request) {
 		
@@ -72,7 +72,7 @@ public class WorkflowConfigurationResource {
 		               .build();
 	}
 	
-	@PostMapping ("/v1/client/private/configuration/delete")
+	@PostMapping ("/client/private/configuration/delete")
 	public Response<Void> delete(@RequestHeader ("X-Subject") UUID wfConfigId) {
 		wfConfigService.delete(wfConfigId);
 		

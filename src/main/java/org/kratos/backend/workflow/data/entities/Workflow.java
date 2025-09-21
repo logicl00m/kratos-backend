@@ -42,26 +42,8 @@ public class Workflow {
 	@Column (name = "state", nullable = false)
 	private String state;
 	
-	@Size (max = 255)
 	@NotNull
-	@Column (name = "created_by", nullable = false)
-	private String createdBy;
-	
-	@Size (max = 255)
-	@NotNull
-	@Column (name = "updated_by", nullable = false)
-	private String updatedBy;
-	
-	@Generated (event = EventType.INSERT)
-	@Column (name = "created_at", nullable = false, updatable = false, insertable = false)
-	private ZonedDateTime createdAt;
-	
-	@UpdateTimestamp
-	@Column (name = "updated_at", nullable = false)
-	private ZonedDateTime updatedAt;
-	
-	@NotNull
-	@Column (name = "is_active", nullable = false)
-	private Boolean isActive = true;
+	@Column (name = "is_archived", nullable = false)
+	private Boolean isArchived = false;
 	
 }

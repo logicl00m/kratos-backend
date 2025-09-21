@@ -22,14 +22,25 @@
     "states": {
       "description": "states in the workflow",
       "type": "object",
+      "properties": {
+        "initialState": {
+          "type": "string"
+        }
+      },
       "additionalProperties": {
         "$ref": "#/$defs/state"
       },
-      "minProperties": 1
+      "minProperties": 1,
+      "required": [
+        "initialState"
+      ]
     },
     "scripts": {
       "description": "scripts in the workflow",
-      "type": "object"
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/$defs/script"
+      }
     }
   },
   "additionalProperties": false,
@@ -38,6 +49,13 @@
     "version"
   ],
   "$defs": {
+    "script": {
+      "title": "script",
+      "type": "object",
+      "description": "schema to define script",
+      "properties": {
+      }
+    },
     "form": {
       "title": "form",
       "type": "object",

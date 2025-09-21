@@ -98,3 +98,19 @@ alter table kratos.workflows
 -- create is deleted row for workflow configuration
 alter table kratos.workflow_configurations
     add is_deleted bool not null default false;
+
+-- changeset Noman5237:1758079530-11
+-- create is deleted row for workflows
+alter table kratos.workflows
+    add is_archived bool not null default false;
+
+-- changeset Noman5237:1758079530-12
+-- dropping created and updated columns
+alter table kratos.workflows
+    drop column created_at;
+alter table kratos.workflows
+    drop column updated_at;
+alter table kratos.workflows
+    drop column created_by;
+alter table kratos.workflows
+    drop column updated_by;
