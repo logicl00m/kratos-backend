@@ -116,6 +116,18 @@
       "properties": {
         "forms": {
           "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ],
+            "additionalProperties": false
+          },
           "minItems": 1,
           "additionalProperties": false
         },
