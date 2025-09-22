@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 public class WorkflowConfigDummyResource {
 
     // POST / -> create
-    @ResponseStatus(HttpStatus.CREATED)
+    @org.springframework.web.bind.annotation.ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public Response<WorkflowConfiguration> createWorkflowConfig(
             @Valid @RequestBody WorkflowConfigurationRequest request
@@ -125,7 +125,7 @@ public class WorkflowConfigDummyResource {
     }
 
     // DELETE /{id}
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @org.springframework.web.bind.annotation.ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
     public Response<Void> deleteWorkflowConfig(@PathVariable String id) {
         if (id == null || id.isBlank()) {
