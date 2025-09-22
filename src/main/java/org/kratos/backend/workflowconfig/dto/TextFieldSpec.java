@@ -1,4 +1,8 @@
 package org.kratos.backend.workflowconfig.dto;
 
-public record TextFieldSpec(String placeholder) implements FieldSpec {}
+import jakarta.validation.constraints.NotNull;
 
+public record TextFieldSpec(
+    @NotNull(message = "Text field placeholder is required")
+    String placeholder
+) implements FieldSpec {}

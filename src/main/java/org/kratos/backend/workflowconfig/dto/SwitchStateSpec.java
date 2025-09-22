@@ -1,4 +1,11 @@
 package org.kratos.backend.workflowconfig.dto;
 
-public record SwitchStateSpec(String expression, String operation) implements StateSpec {}
+import jakarta.validation.constraints.NotBlank;
 
+public record SwitchStateSpec(
+    @NotBlank(message = "Switch state expression is required")
+    String expression,
+
+    // Optional - operation is not required in schema
+    String operation
+) implements StateSpec {}
