@@ -1,5 +1,6 @@
 package org.kratos.backend.workflow.service.impl;
 
+import jakarta.transaction.Transactional;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,15 +16,13 @@ public class WorkflowContext {
 	private final Workflow workflow;
 	private final WorkflowRepository workflowRepository;
 	
-	public void tryTransition(String action) {
+	@Transactional
+	public void transition(String action) {
 		State currentStateCtx = this.getCurrentState();
 		do {
 			var stateHandler = currentStateCtx.kind().handler;
-			var transitionResponse = stateHandler.tryTransition(this, action);
-			if (transitionResponse.isSuccessful()) {
-				this.workflow.setState(transitionResponse.nextState()
-				                                         .name());
-			}
+			var transitionResponse = stateHandler.transition(this, action);
+			this.workflow.setState(transitionResponse);
 			workflowRepository.saveAndFlush(workflow);
 			currentStateCtx = this.getCurrentState();
 		} while (!currentStateCtx.kind().requiresExternalIntervention);

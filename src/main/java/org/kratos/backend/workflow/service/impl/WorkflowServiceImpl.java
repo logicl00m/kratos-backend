@@ -48,7 +48,7 @@ public class WorkflowServiceImpl implements WorkflowService {
 		var workflowContext = WorkflowContext.builder()
 		                                     .workflow(workflow)
 		                                     .build();
-		workflowContext.tryTransition(request.action());
+		workflowContext.transition(request.action());
 		return wfMapper.toDto(workflow);
 	}
 	
