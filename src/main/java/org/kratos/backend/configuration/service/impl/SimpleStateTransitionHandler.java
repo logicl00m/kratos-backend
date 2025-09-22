@@ -1,15 +1,38 @@
 package org.kratos.backend.configuration.service.impl;
 
-import org.jetbrains.annotations.NotNull;
+import lombok.RequiredArgsConstructor;
+import org.kratos.backend.common.constants.ResponseStatus;
+import org.kratos.backend.common.exceptions.BaseException;
+import org.kratos.backend.configuration.dto.WorkflowConfigurationContext.State.SimpleActionSpec;
+import org.kratos.backend.configuration.dto.WorkflowConfigurationContext.State.SimpleStateSpec;
 import org.kratos.backend.configuration.service.StateTransitionHandler;
+import org.kratos.backend.workflow.data.repositories.WorkflowRepository;
 import org.kratos.backend.workflow.service.impl.WorkflowContext;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class SimpleStateTransitionHandler implements StateTransitionHandler {
 	
+	private final WorkflowRepository workflowRepository;
+	
 	@Override
-	public @NotNull String transition(WorkflowContext workflowContext, String action) {
-		return "";
+	public void transition(WorkflowContext workflowContext, String action) {
+		// fixme(high): validation
+		var currentStateCtx = workflowContext.getCurrentState();
+		var currentStateSpec = (SimpleStateSpec) currentStateCtx.spec();
+		SimpleActionSpec currentStateActionCtx = currentStateSpec.actions()
+		                                                         .get(action);
+		if (currentStateActionCtx == null) {
+			throw BaseException.builder()
+			                   .responseStatus(ResponseStatus.ACTION_NOT_FOUND_FOR_CURRENT_STATE)
+			                   .build();
+		}
+		
+		workflowContext.getWorkflow()
+		               .setState(currentStateActionCtx.nextState());
+		workflowRepository.saveAndFlush(workflowContext.getWorkflow());
+		
+		// fixme(high): operation
 	}
 }

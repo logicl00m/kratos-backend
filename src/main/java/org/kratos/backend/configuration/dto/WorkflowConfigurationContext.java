@@ -1,7 +1,6 @@
 package org.kratos.backend.configuration.dto;
 
 
-import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -14,11 +13,12 @@ import java.util.Map;
 /**
  * Root record for workflow configuration.
  */
-public record ParsedWorkflowConfiguration(
+public record WorkflowConfigurationContext(
 		@JsonProperty ("id") String id,
 		@JsonProperty ("version") String version,
+		@JsonProperty ("initialState") String initialState,
 		@JsonProperty ("forms") Map<String, Form> forms,
-		@JsonProperty ("states") States states,
+		@JsonProperty ("states") Map<String, State> states,
 		@JsonProperty ("scripts") Map<String, Script> scripts
 ) {
 	
@@ -76,13 +76,6 @@ public record ParsedWorkflowConfiguration(
 		) implements Spec {
 		
 		}
-	}
-	
-	public record States(
-			@JsonProperty ("initialState") String initialState,
-			@JsonAnySetter Map<String, State> allStates
-	) {
-	
 	}
 	
 	public record State(

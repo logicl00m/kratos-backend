@@ -19,9 +19,11 @@ public class ResponseStatus {
 	public static final ResponseStatus WF_CONFIG_NOT_FOUND = new ResponseStatus("E4003",
 	                                                                            "workflow configuration not found");
 	public static final ResponseStatus FAILED_TO_LOAD_WF_SCHEMA = new ResponseStatus("E4004",
-	                                                                            "failed to load wf schema");
+	                                                                                 "failed to load wf schema");
 	public static final ResponseStatus WF_NOT_FOUND = new ResponseStatus("E4005",
-	                                                                            "workflow not found");
+	                                                                     "workflow not found");
+	public static final ResponseStatus ACTION_NOT_FOUND_FOR_CURRENT_STATE = new ResponseStatus("E4006",
+	                                                                                           "action not found for current state");
 	
 	// System Errors (5xxx)
 	public static final ResponseStatus INTERNAL_ERROR = new ResponseStatus("E5002", "internal error");

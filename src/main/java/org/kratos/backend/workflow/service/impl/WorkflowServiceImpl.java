@@ -35,8 +35,7 @@ public class WorkflowServiceImpl implements WorkflowService {
 		Workflow workflow = new Workflow();
 		workflow.setData(new HashMap<>());
 		workflow.setWfConfig(wfConfig);
-		workflow.setState(wfConfig.parsed()
-		                          .states()
+		workflow.setState(wfConfig.context()
 		                          .initialState());
 		workflowRepository.saveAndFlush(workflow);
 		return wfMapper.toDto(workflow);

@@ -12,6 +12,9 @@
       "type": "string",
       "description": "version of the workflow"
     },
+    "initialState": {
+      "type": "string"
+    },
     "forms": {
       "description": "forms to be used in the workflow",
       "type": "object",
@@ -22,18 +25,10 @@
     "states": {
       "description": "states in the workflow",
       "type": "object",
-      "properties": {
-        "initialState": {
-          "type": "string"
-        }
-      },
       "additionalProperties": {
         "$ref": "#/$defs/state"
       },
-      "minProperties": 2,
-      "required": [
-        "initialState"
-      ]
+      "minProperties": 1
     },
     "scripts": {
       "description": "scripts in the workflow",
@@ -46,7 +41,8 @@
   "additionalProperties": false,
   "required": [
     "id",
-    "version"
+    "version",
+    "initialState"
   ],
   "$defs": {
     "script": {
