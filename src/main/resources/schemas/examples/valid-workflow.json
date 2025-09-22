@@ -1,0 +1,108 @@
+{
+  "id": "sample-workflow",
+  "version": "1.0.0",
+  "forms": {
+    "userForm": {
+      "fields": {
+        "firstName": {
+          "name": "First Name",
+          "data": "firstName",
+          "kind": "text",
+          "spec": {
+            "placeholder": "Enter your first name"
+          }
+        },
+        "age": {
+          "name": "Age",
+          "data": "userAge",
+          "kind": "number",
+          "actions": ["submit", "save"],
+          "spec": {
+            "placeholder": "Enter your age",
+            "min": 18,
+            "max": 65
+          }
+        }
+      }
+    },
+    "reviewForm": {
+      "fields": {
+        "comments": {
+          "name": "Review Comments",
+          "data": "reviewComments",
+          "kind": "text",
+          "spec": {
+            "placeholder": "Enter review comments"
+          }
+        }
+      }
+    }
+  },
+  "states": {
+    "initialState": "userInput",
+    "userInput": {
+      "name": "User Input State",
+      "kind": "simple",
+      "spec": {
+        "forms": [
+          {"id": "userForm"}
+        ],
+        "actions": {
+          "submit": {
+            "name": "Submit Application",
+            "nextState": "review",
+            "validation": "validateUserInput",
+            "operation": "saveUserData"
+          },
+          "save": {
+            "name": "Save Draft",
+            "nextState": "userInput"
+          }
+        }
+      }
+    },
+    "review": {
+      "name": "Review State",
+      "kind": "simple",
+      "spec": {
+        "forms": [
+          {"id": "reviewForm"}
+        ],
+        "actions": {
+          "approve": {
+            "name": "Approve",
+            "nextState": "approved"
+          },
+          "reject": {
+            "name": "Reject",
+            "nextState": "rejected"
+          }
+        }
+      }
+    },
+    "approved": {
+      "name": "Approved State",
+      "kind": "switch",
+      "spec": {
+        "expression": "workflow.status === 'approved'",
+        "operation": "sendApprovalNotification"
+      }
+    },
+    "rejected": {
+      "name": "Rejected State",
+      "kind": "switch",
+      "spec": {
+        "expression": "workflow.status === 'rejected'",
+        "operation": "sendRejectionNotification"
+      }
+    }
+  },
+  "scripts": {
+    "validateUserInput": {},
+    "saveUserData": {},
+    "sendApprovalNotification": {},
+    "sendRejectionNotification": {}
+  }
+}
+
+

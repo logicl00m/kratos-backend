@@ -1,0 +1,48 @@
+{
+  "id": "invalid-workflow",
+  "version": "1.0.0",
+  "forms": {
+    "userForm": {
+      "fields": {
+        "firstName": {
+          "name": "First Name",
+          "data": "firstName",
+          "kind": "invalidType",
+          "spec": {
+            "placeholder": "Enter your first name"
+          }
+        },
+        "age": {
+          "name": "Age",
+          "data": "userAge",
+          "kind": "number",
+          "actions": ["submit", "nonExistentAction"],
+          "spec": {
+            "placeholder": "Enter your age",
+            "min": 18,
+            "max": 65
+          }
+        }
+      }
+    }
+  },
+  "states": {
+    "initialState": "nonExistentState",
+    "userInput": {
+      "name": "User Input State",
+      "kind": "simple",
+      "spec": {
+        "forms": [
+          {"id": "nonExistentForm"}
+        ],
+        "actions": {
+          "submit": {
+            "name": "Submit Application",
+            "nextState": "nonExistentTargetState"
+          }
+        }
+      }
+    }
+  }
+}
+
