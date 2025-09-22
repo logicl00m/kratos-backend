@@ -45,12 +45,10 @@ public class WorkflowServiceImpl implements WorkflowService {
 	@Override
 	public WorkflowResponse updateState(WorkflowUpdateRequest request) {
 		var workflow = getEntity(request.id());
-		var currentState = workflow.getState();
-		// wip: update state
-//		do {
-//
-//		} while ();
-		
+		var workflowContext = WorkflowContext.builder()
+		                                     .workflow(workflow)
+		                                     .build();
+		workflowContext.tryTransition(request.action());
 		return wfMapper.toDto(workflow);
 	}
 	

@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.RequiredArgsConstructor;
+import org.kratos.backend.configuration.service.StateTransitionHandler;
 
 import java.util.List;
 import java.util.Map;
@@ -101,13 +102,14 @@ public record ParsedWorkflowConfiguration(
 		
 		@RequiredArgsConstructor
 		public enum Kind {
-			@JsonProperty ("simple") SIMPLE(true),
-			@JsonProperty ("switch") SWITCH(false),
-			@JsonProperty ("allOf") ALL_OF(true),
-			@JsonProperty ("anyOf") ANY_OF(true),
-			@JsonProperty ("doWhile") DO_WHILE(true);
+			@JsonProperty ("simple") SIMPLE(true, null),
+			@JsonProperty ("switch") SWITCH(false, null),
+			@JsonProperty ("allOf") ALL_OF(true, null),
+			@JsonProperty ("anyOf") ANY_OF(true, null),
+			@JsonProperty ("doWhile") DO_WHILE(true, null);
 			
 			public final boolean requiresExternalIntervention;
+			public final StateTransitionHandler handler;
 			
 		}
 		
