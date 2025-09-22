@@ -25,6 +25,9 @@ public class ResponseStatus {
 	public static final ResponseStatus ACTION_NOT_FOUND_FOR_CURRENT_STATE = new ResponseStatus("E4006",
 	                                                                                           "action not found for current state");
 	
+	public static final ResponseStatus WF_STATE_HANDLER_NOT_DEFINED = new ResponseStatus("E4007",
+	                                                                                           "workflow state handler not defined");
+	
 	// System Errors (5xxx)
 	public static final ResponseStatus INTERNAL_ERROR = new ResponseStatus("E5002", "internal error");
 	

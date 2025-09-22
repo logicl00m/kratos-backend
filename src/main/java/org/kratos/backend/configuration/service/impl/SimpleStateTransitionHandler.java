@@ -19,6 +19,7 @@ public class SimpleStateTransitionHandler implements StateTransitionHandler {
 	@Override
 	public void transition(WorkflowContext workflowContext, String action) {
 		// fixme(high): validation
+		
 		var currentStateCtx = workflowContext.getCurrentState();
 		var currentStateSpec = (SimpleStateSpec) currentStateCtx.spec();
 		SimpleActionSpec currentStateActionCtx = currentStateSpec.actions()

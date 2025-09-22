@@ -4,15 +4,13 @@ package org.kratos.backend.configuration.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.kratos.backend.configuration.service.StateTransitionHandler;
 
 import java.util.List;
 import java.util.Map;
 
-/**
- * Root record for workflow configuration.
- */
 public record WorkflowConfigurationContext(
 		@JsonProperty ("id") String id,
 		@JsonProperty ("version") String version,
@@ -95,15 +93,16 @@ public record WorkflowConfigurationContext(
 		
 		@RequiredArgsConstructor
 		public enum Kind {
-			@JsonProperty ("simple") SIMPLE(true, null),
-			@JsonProperty ("switch") SWITCH(false, null),
-			@JsonProperty ("allOf") ALL_OF(true, null),
-			@JsonProperty ("anyOf") ANY_OF(true, null),
-			@JsonProperty ("doWhile") DO_WHILE(true, null);
+			@JsonProperty ("simple") SIMPLE(true),
+			@JsonProperty ("switch") SWITCH(false),
+			@JsonProperty ("allOf") ALL_OF(true),
+			@JsonProperty ("anyOf") ANY_OF(true),
+			@JsonProperty ("doWhile") DO_WHILE(true);
 			
 			public final boolean requiresExternalIntervention;
-			public final StateTransitionHandler handler;
 			
+			@Getter
+			StateTransitionHandler handler;
 		}
 		
 		public sealed interface Spec permits SimpleStateSpec, SwitchStateSpec {
