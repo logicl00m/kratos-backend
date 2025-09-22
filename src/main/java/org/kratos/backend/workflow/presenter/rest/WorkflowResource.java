@@ -6,6 +6,7 @@ import org.kratos.backend.common.constants.ResponseStatus;
 import org.kratos.backend.common.dtos.PaginatedResponse;
 import org.kratos.backend.common.dtos.Request;
 import org.kratos.backend.common.dtos.Response;
+import org.kratos.backend.workflow.dto.WorkflowDataUpdateRequest;
 import org.kratos.backend.workflow.dto.WorkflowResponse;
 import org.kratos.backend.workflow.dto.WorkflowUpdateRequest;
 import org.kratos.backend.workflow.service.WorkflowService;
@@ -36,16 +37,25 @@ public class WorkflowResource {
 	public Response<WorkflowResponse> update(@RequestHeader ("X-Subject") UUID wfConfigId,
 	                                         @Valid @RequestBody Request<WorkflowUpdateRequest> workflowUpdateRequest) {
 		return Response.<WorkflowResponse>builder()
-		               .data(workflowService.update(wfConfigId, workflowUpdateRequest.data()))
+		               .data(workflowService.update(workflowUpdateRequest.data()))
+		               .status(ResponseStatus.ALL_OK)
+		               .build();
+	}
+	
+	@PostMapping ("/update/data")
+	public Response<WorkflowResponse> updateData(@RequestHeader ("X-Subject") UUID wfConfigId,
+	                                             @Valid @RequestBody Request<WorkflowDataUpdateRequest> wfDataRequest) {
+		return Response.<WorkflowResponse>builder()
+		               .data(workflowService.updateData(wfDataRequest.data()))
 		               .status(ResponseStatus.ALL_OK)
 		               .build();
 	}
 	
 	@PostMapping ("/get")
 	public Response<WorkflowResponse> get(@RequestHeader ("X-Subject") UUID wfConfigId,
-	                                      @Valid @RequestBody Request<String> workflowId) {
+	                                      @Valid @RequestBody Request<UUID> workflowId) {
 		return Response.<WorkflowResponse>builder()
-		               .data(workflowService.get(workflowId))
+		               .data(workflowService.get(workflowId.data()))
 		               .status(ResponseStatus.ALL_OK)
 		               .build();
 	}

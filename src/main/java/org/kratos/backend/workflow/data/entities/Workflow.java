@@ -23,7 +23,7 @@ public class Workflow {
 	private UUID id;
 	
 	@NotNull
-	@ManyToOne (fetch = FetchType.LAZY, optional = false)
+	@ManyToOne (fetch = FetchType.EAGER, optional = false)
 	@JoinColumn (name = "wf_config_id", nullable = false)
 	private WorkflowConfiguration wfConfig;
 	
