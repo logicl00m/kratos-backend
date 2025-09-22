@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 import java.util.Map;
@@ -78,7 +79,7 @@ public record ParsedWorkflowConfiguration(
 	
 	public record States(
 			@JsonProperty ("initialState") String initialState,
-			@JsonAnySetter Map<String, State> states
+			@JsonAnySetter Map<String, State> allStates
 	) {
 	
 	}
@@ -98,12 +99,16 @@ public record ParsedWorkflowConfiguration(
 			Spec spec
 	) {
 		
+		@RequiredArgsConstructor
 		public enum Kind {
-			@JsonProperty ("simple") SIMPLE,
-			@JsonProperty ("switch") SWITCH,
-			@JsonProperty ("allOf") ALL_OF,
-			@JsonProperty ("anyOf") ANY_OF,
-			@JsonProperty ("doWhile") DO_WHILE
+			@JsonProperty ("simple") SIMPLE(true),
+			@JsonProperty ("switch") SWITCH(false),
+			@JsonProperty ("allOf") ALL_OF(true),
+			@JsonProperty ("anyOf") ANY_OF(true),
+			@JsonProperty ("doWhile") DO_WHILE(true);
+			
+			public final boolean requiresExternalIntervention;
+			
 		}
 		
 		public sealed interface Spec permits SimpleStateSpec, SwitchStateSpec {

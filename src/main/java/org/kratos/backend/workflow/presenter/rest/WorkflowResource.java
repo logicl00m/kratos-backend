@@ -33,11 +33,11 @@ public class WorkflowResource {
 		               .build();
 	}
 	
-	@PostMapping ("/update")
-	public Response<WorkflowResponse> update(@RequestHeader ("X-Subject") UUID wfConfigId,
-	                                         @Valid @RequestBody Request<WorkflowUpdateRequest> workflowUpdateRequest) {
+	@PostMapping ("/update/state")
+	public Response<WorkflowResponse> updateState(@RequestHeader ("X-Subject") UUID wfConfigId,
+	                                              @Valid @RequestBody Request<WorkflowUpdateRequest> workflowUpdateRequest) {
 		return Response.<WorkflowResponse>builder()
-		               .data(workflowService.update(workflowUpdateRequest.data()))
+		               .data(workflowService.updateState(workflowUpdateRequest.data()))
 		               .status(ResponseStatus.ALL_OK)
 		               .build();
 	}
