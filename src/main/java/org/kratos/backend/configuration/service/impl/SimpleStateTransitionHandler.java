@@ -3,6 +3,7 @@ package org.kratos.backend.configuration.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.kratos.backend.common.constants.ResponseStatus;
 import org.kratos.backend.common.exceptions.BaseException;
+import org.kratos.backend.configuration.dto.WorkflowConfigurationContext.State.Execution;
 import org.kratos.backend.configuration.dto.WorkflowConfigurationContext.State.SimpleActionSpec;
 import org.kratos.backend.configuration.dto.WorkflowConfigurationContext.State.SimpleStateSpec;
 import org.kratos.backend.configuration.service.StateTransitionHandler;
@@ -23,8 +24,6 @@ public class SimpleStateTransitionHandler implements StateTransitionHandler {
 		var currentStateSpec = (SimpleStateSpec) currentStateCtx.spec();
 		SimpleActionSpec currentStateActionCtx = currentStateSpec.actions()
 		                                                         .get(action);
-		// fixme(high): validation
-		var executionCtx = currentStateActionCtx.validation().spec();
 		
 		if (currentStateActionCtx == null) {
 			throw BaseException.builder()
@@ -32,10 +31,25 @@ public class SimpleStateTransitionHandler implements StateTransitionHandler {
 			                   .build();
 		}
 		
+		Execution validation = currentStateActionCtx.validation();
+		boolean validated = validation
+				.kind()
+				.getHandler()
+				.validate(workflowContext, validation.spec());
+		
+		if (!validated) {
+			throw BaseException.builder()
+			                   .responseStatus(ResponseStatus.ACTION_VALIDATION_FAILED)
+			                   .build();
+		}
+		
 		workflowContext.getWorkflow()
 		               .setState(currentStateActionCtx.nextState());
 		workflowRepository.saveAndFlush(workflowContext.getWorkflow());
 		
-		// fixme(high): operation
+		Execution operation = currentStateActionCtx.operation();
+		operation.kind()
+		         .getHandler()
+		         .execute(workflowContext, operation.spec());
 	}
 }

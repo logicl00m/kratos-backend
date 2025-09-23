@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.kratos.backend.configuration.service.Executor;
 import org.kratos.backend.configuration.service.StateTransitionHandler;
 
 import java.util.List;
@@ -123,14 +124,27 @@ public record WorkflowConfigurationContext(
 		
 		}
 		
-		public enum ExecutionKinds {
+		@Getter
+		public enum Executors {
 			@JsonProperty ("inline") INLINE,
 			@JsonProperty ("script") SCRIPT;
+			
+			Executor handler;
 		}
 		
 		public record Execution(
-				@JsonProperty ("kind") ExecutionKinds kind,
-				@JsonProperty ("spec") ExecutionSpec spec
+				@JsonProperty ("kind") Executors kind,
+				
+				@JsonTypeInfo (
+						use = JsonTypeInfo.Id.NAME,
+						include = JsonTypeInfo.As.EXTERNAL_PROPERTY,
+						property = "kind"
+				)
+				@JsonSubTypes ({
+						@JsonSubTypes.Type (value = InlineExecutionSpec.class, name = "inline"),
+						@JsonSubTypes.Type (value = ScriptExecutionSpec.class, name = "script")
+				})
+				ExecutionSpec spec
 		) {
 		
 		}

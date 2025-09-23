@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class StateTransitionHandlers {
+public class StateTransitionRegistry {
 	
 	private final SimpleStateTransitionHandler SIMPLE;
 	
