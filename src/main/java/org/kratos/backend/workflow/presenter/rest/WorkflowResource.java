@@ -3,7 +3,6 @@ package org.kratos.backend.workflow.presenter.rest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.kratos.backend.common.constants.ResponseStatus;
-import org.kratos.backend.common.dtos.PaginatedResponse;
 import org.kratos.backend.common.dtos.Request;
 import org.kratos.backend.common.dtos.Response;
 import org.kratos.backend.workflow.dto.WorkflowDataUpdateRequest;
@@ -61,11 +60,10 @@ public class WorkflowResource {
 	}
 	
 	@PostMapping ("/get/all")
-	public Response<List<WorkflowResponse>> getAll(@RequestHeader ("X-Subject") UUID wfConfigId) {
-		PaginatedResponse<List<WorkflowResponse>> allWorkflows = workflowService.getAll(wfConfigId);
+	public Response<List<WorkflowResponse>> getAll() {
+		List<WorkflowResponse> allWorkflows = workflowService.getAll();
 		return Response.<List<WorkflowResponse>>builder()
-		               .data(allWorkflows.data())
-		               .pagination(allWorkflows.pagination())
+		               .data(allWorkflows)
 		               .status(ResponseStatus.ALL_OK)
 		               .build();
 	}

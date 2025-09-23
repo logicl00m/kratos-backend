@@ -22,6 +22,6 @@ public interface WorkflowService {
 	
 	Workflow getEntity(UUID workflowId);
 	
-	PaginatedResponse<List<WorkflowResponse>> getAll(UUID wfConfigId);
-	
+	List<WorkflowResponse> getAll();
+
 }
