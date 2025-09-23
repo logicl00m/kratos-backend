@@ -57,11 +57,9 @@ public class WorkflowConfigurationServiceImpl implements WorkflowConfigurationSe
 	@Override
 	public WorkflowConfigurationResponse update(UUID wfConfigId, @Valid WorkflowConfigurationRequest wfConfig,
 	                                            String userId) {
-		wfConfigRepository.findById(wfConfigId)
-		                  .orElseThrow(() -> BaseException.builder()
-		                                                  .responseStatus(WF_CONFIG_NOT_FOUND)
-		                                                  .build());
 		
+		getEntity(wfConfigId);
+		// fixme(high): created_by is also getting changed
 		var entity = wfConfigMapper.toEntity(wfConfig, userId);
 		entity.setId(wfConfigId);
 		wfConfigRepository.saveAndFlush(entity);
@@ -70,11 +68,7 @@ public class WorkflowConfigurationServiceImpl implements WorkflowConfigurationSe
 	
 	@Override
 	public WorkflowConfigurationResponse get(UUID wfConfigId) {
-		WorkflowConfiguration wfConfig = wfConfigRepository.findById(wfConfigId)
-		                                                   .orElseThrow(() -> BaseException.builder()
-		                                                                                   .responseStatus(
-				                                                                                   WF_CONFIG_NOT_FOUND)
-		                                                                                   .build());
+		WorkflowConfiguration wfConfig = getEntity(wfConfigId);
 		return wfConfigMapper.toDto(wfConfig);
 	}
 	
@@ -97,11 +91,7 @@ public class WorkflowConfigurationServiceImpl implements WorkflowConfigurationSe
 	
 	@Override
 	public void delete(UUID wfConfigId) {
-		WorkflowConfiguration wfConfig = wfConfigRepository.findById(wfConfigId)
-		                                                   .orElseThrow(() -> BaseException.builder()
-		                                                                                   .responseStatus(
-				                                                                                   WF_CONFIG_NOT_FOUND)
-		                                                                                   .build());
+		WorkflowConfiguration wfConfig = getEntity(wfConfigId);
 		wfConfig.setIsDeleted(true);
 		resourceOperationService.removeRolesFromSubject(wfConfigId);
 		wfConfigRepository.save(wfConfig);

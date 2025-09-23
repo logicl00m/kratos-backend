@@ -28,6 +28,12 @@ public class ResponseStatus {
 	public static final ResponseStatus WF_STATE_HANDLER_NOT_DEFINED = new ResponseStatus("E4007",
 	                                                                                           "workflow state handler not defined");
 	
+	public static final ResponseStatus FAILED_TO_CREATE_FORM = new ResponseStatus("E4008",
+	                                                                                     "failed to create form");
+	
+	public static final ResponseStatus FORM_NOT_FOUND = new ResponseStatus("E4009",
+	                                                                              "form not found");
+	
 	// System Errors (5xxx)
 	public static final ResponseStatus INTERNAL_ERROR = new ResponseStatus("E5002", "internal error");
 	
