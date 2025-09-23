@@ -3,6 +3,8 @@ package org.kratos.backend.workflow.service.impl;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.kratos.backend.common.dtos.PaginatedResponse;
+import org.kratos.backend.common.dtos.PaginationRequest;
+import org.kratos.backend.common.dtos.PaginationResponse;
 import org.kratos.backend.common.exceptions.BaseException;
 import org.kratos.backend.configuration.service.WorkflowConfigurationService;
 import org.kratos.backend.workflow.data.entities.Workflow;
@@ -12,6 +14,9 @@ import org.kratos.backend.workflow.dto.WorkflowResponse;
 import org.kratos.backend.workflow.dto.WorkflowUpdateRequest;
 import org.kratos.backend.workflow.mapper.WorkflowMapper;
 import org.kratos.backend.workflow.service.WorkflowService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -62,7 +67,7 @@ public class WorkflowServiceImpl implements WorkflowService {
 	
 	@Override
 	public WorkflowResponse get(UUID workflowId) {
-		return null;
+		return wfMapper.toDto(getEntity(workflowId));
 	}
 	
 	@Override
@@ -75,7 +80,10 @@ public class WorkflowServiceImpl implements WorkflowService {
 	
 	
 	@Override
-	public PaginatedResponse<List<WorkflowResponse>> getAll(UUID wfConfigId) {
-		return null;
+	public PaginatedResponse<List<WorkflowResponse>> getAll(UUID wfConfigId, PaginationRequest page) {
+		Pageable pageable = PageRequest.of(page.number(), page.size());
+		Page<Workflow> workflows = workflowRepository.findAllByWfConfig_Id(wfConfigId, pageable);
+		return new PaginatedResponse<>(wfMapper.toResponseList(workflows.getContent()),
+		                               new PaginationResponse(workflows));
 	}
 }
