@@ -167,7 +167,7 @@ public record WorkflowConfigurationContext(
 		
 		public record InlineExecutionSpec(
 				@JsonProperty ("runtime") String runtime,
-				@JsonProperty ("operation") String code
+				@JsonProperty ("code") String code
 		) implements ExecutionSpec {
 		
 		}

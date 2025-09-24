@@ -35,6 +35,8 @@ public class ResponseStatus {
 	                                                                       "form not found");
 	public static final ResponseStatus ACTION_VALIDATION_FAILED = new ResponseStatus("E4010",
 	                                                                                 "action validation failed");
+	public static final ResponseStatus SCRIPT_NOT_FOUND = new ResponseStatus("E4011",
+	                                                                                 "script not found");
 	
 	// System Errors (5xxx)
 	public static final ResponseStatus INTERNAL_ERROR = new ResponseStatus("E5002", "internal error");
