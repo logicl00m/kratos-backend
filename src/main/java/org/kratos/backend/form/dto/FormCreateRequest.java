@@ -1,4 +1,7 @@
 package org.kratos.backend.form.dto;
 
-public record FormCreateRequest(java.util.Map<String, Object> formJson) {
-}
+import java.util.Map;
+
+public record FormCreateRequest(@com.fasterxml.jackson.annotation.JsonProperty("formJson")
+                                Map<String,Object> formJson) {}
+
