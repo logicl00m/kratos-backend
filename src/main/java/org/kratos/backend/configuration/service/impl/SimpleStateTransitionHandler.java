@@ -10,7 +10,7 @@ import org.kratos.backend.configuration.dto.WorkflowConfigurationContext.State.S
 import org.kratos.backend.configuration.service.StateTransitionHandler;
 import org.kratos.backend.workflow.data.repositories.StateChangeRepository;
 import org.kratos.backend.workflow.data.repositories.WorkflowRepository;
-import org.kratos.backend.workflow.mapper.WorkflowMapper;
+import org.kratos.backend.workflow.mapper.ChangeMapper;
 import org.kratos.backend.workflow.service.impl.WorkflowContext;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +22,7 @@ public class SimpleStateTransitionHandler implements StateTransitionHandler {
 	
 	private final WorkflowRepository workflowRepository;
 	private final StateChangeRepository stateChangeRepository;
-	private final WorkflowMapper wfMapper;
+	private final ChangeMapper changeMapper;
 	
 	@Transactional
 	@Override
@@ -53,7 +53,7 @@ public class SimpleStateTransitionHandler implements StateTransitionHandler {
 			}
 		}
 		
-		var stateChange = wfMapper.stateChange(action, workflowContext.getWorkflow(), userId);
+		var stateChange = changeMapper.stateChange(action, workflowContext.getWorkflow(), userId);
 		stateChange.setToState(currentStateActionCtx.nextState());
 		workflowContext.getWorkflow()
 		               .setState(currentStateActionCtx.nextState());

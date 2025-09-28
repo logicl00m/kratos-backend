@@ -1,37 +1,38 @@
 package org.kratos.backend.workflow.mapper;
 
+import lombok.Setter;
 import org.kratos.backend.workflow.data.entities.DataChange;
 import org.kratos.backend.workflow.data.entities.StateChange;
 import org.kratos.backend.workflow.data.entities.Workflow;
-import org.kratos.backend.workflow.dto.WorkflowDataUpdateRequest;
+import org.kratos.backend.workflow.data.repositories.DataChangeRepository;
+import org.kratos.backend.workflow.data.repositories.StateChangeRepository;
 import org.kratos.backend.workflow.dto.WorkflowResponse;
+import org.kratos.backend.workflow.dto.WorkflowResponse.HistoryDto;
 import org.mapstruct.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
+import java.util.UUID;
 
+@Setter (onMethod = @__ (@Autowired))
 @Mapper (unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = MappingConstants.ComponentModel.SPRING)
-public interface WorkflowMapper {
+public abstract class WorkflowMapper {
 	
-	WorkflowResponse toDto(Workflow workflow);
+	private DataChangeRepository dataChangeRepository;
+	private StateChangeRepository stateChangeRepository;
+	private ChangeMapper changeMapper;
 	
-	List<WorkflowResponse> toResponseList(List<Workflow> content);
+	@Mapping (target = "history", expression = "java(getHistory(workflow.getId()))")
+	public abstract WorkflowResponse toDto(Workflow workflow);
 	
-	@Mapping (target = "id", ignore = true)
-	@Mapping (target = "wfId", expression = "java(workflow.getId())")
-	@Mapping (target = "currentState", expression = "java(workflow.getState())")
-	@Mapping (target = "diff", source = "diff")
-	@Mapping (target = "createdBy", expression = "java(userId)")
-	@Mapping (target = "createdAt", ignore = true)
-	DataChange dataChange(WorkflowDataUpdateRequest request, @Context Workflow workflow, @Context String userId);
+	public abstract List<WorkflowResponse> toResponseList(List<Workflow> content);
 	
-	@Mapping (target = "id", ignore = true)
-	@Mapping (target = "wfId", expression = "java(workflow.getId())")
-	@Mapping (target = "fromState", expression = "java(workflow.getState())")
-	@Mapping (target = "toState", ignore = true)
-	@Mapping (target = "action", source = "action")
-	@Mapping (target = "createdBy", expression = "java(userId)")
-	@Mapping (target = "createdAt", ignore = true)
-	StateChange stateChange(String action,
-	                        @Context Workflow workflow,
-	                        @Context String userId);
+	protected HistoryDto getHistory(UUID workflowId) {
+		List<DataChange> dataChangeByWfId = dataChangeRepository.getDataChangeByWfId(workflowId, Sort.by("createdAt"));
+		List<StateChange> stateChangeByWfId = stateChangeRepository.getStateChangeByWfId(workflowId,
+		                                                                                 Sort.by("createdAt"));
+		return new HistoryDto(changeMapper.toDataChangeList(dataChangeByWfId),
+		                      changeMapper.toStateChangeList(stateChangeByWfId));
+	}
 }

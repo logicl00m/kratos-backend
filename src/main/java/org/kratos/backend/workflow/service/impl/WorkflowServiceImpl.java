@@ -14,6 +14,7 @@ import org.kratos.backend.workflow.data.repositories.WorkflowRepository;
 import org.kratos.backend.workflow.dto.WorkflowDataUpdateRequest;
 import org.kratos.backend.workflow.dto.WorkflowResponse;
 import org.kratos.backend.workflow.dto.WorkflowUpdateRequest;
+import org.kratos.backend.workflow.mapper.ChangeMapper;
 import org.kratos.backend.workflow.mapper.WorkflowMapper;
 import org.kratos.backend.workflow.service.WorkflowService;
 import org.springframework.data.domain.Page;
@@ -35,6 +36,7 @@ public class WorkflowServiceImpl implements WorkflowService {
 	private final WorkflowConfigurationService wfConfigService;
 	private final DataChangeRepository dataChangeRepository;
 	private final WorkflowMapper wfMapper;
+	private final ChangeMapper changeMapper;
 	
 	@Override
 	@Transactional
@@ -65,7 +67,7 @@ public class WorkflowServiceImpl implements WorkflowService {
 		var workflow = getEntity(request.id());
 		workflow.setData(request.data());
 		workflowRepository.save(workflow);
-		DataChange dataChange = wfMapper.dataChange(request, workflow, userId);
+		DataChange dataChange = changeMapper.dataChange(request, workflow, userId);
 		dataChangeRepository.save(dataChange);
 		return wfMapper.toDto(workflow);
 	}
