@@ -1,5 +1,6 @@
 package org.kratos.backend.configuration.service.impl;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.kratos.backend.common.constants.ResponseStatus;
 import org.kratos.backend.common.exceptions.BaseException;
@@ -7,7 +8,9 @@ import org.kratos.backend.configuration.dto.WorkflowConfigurationContext.State.E
 import org.kratos.backend.configuration.dto.WorkflowConfigurationContext.State.SimpleActionSpec;
 import org.kratos.backend.configuration.dto.WorkflowConfigurationContext.State.SimpleStateSpec;
 import org.kratos.backend.configuration.service.StateTransitionHandler;
+import org.kratos.backend.workflow.data.repositories.StateChangeRepository;
 import org.kratos.backend.workflow.data.repositories.WorkflowRepository;
+import org.kratos.backend.workflow.mapper.WorkflowMapper;
 import org.kratos.backend.workflow.service.impl.WorkflowContext;
 import org.springframework.stereotype.Service;
 
@@ -18,9 +21,12 @@ import java.util.Objects;
 public class SimpleStateTransitionHandler implements StateTransitionHandler {
 	
 	private final WorkflowRepository workflowRepository;
+	private final StateChangeRepository stateChangeRepository;
+	private final WorkflowMapper wfMapper;
 	
+	@Transactional
 	@Override
-	public void transition(WorkflowContext workflowContext, String action) {
+	public void transition(WorkflowContext workflowContext, String action, String userId) {
 		
 		var currentStateCtx = workflowContext.getCurrentState();
 		var currentStateSpec = (SimpleStateSpec) currentStateCtx.spec();
@@ -46,9 +52,13 @@ public class SimpleStateTransitionHandler implements StateTransitionHandler {
 				                   .build();
 			}
 		}
+		
+		var stateChange = wfMapper.stateChange(action, workflowContext.getWorkflow(), userId);
+		stateChange.setToState(currentStateActionCtx.nextState());
 		workflowContext.getWorkflow()
 		               .setState(currentStateActionCtx.nextState());
-		workflowRepository.saveAndFlush(workflowContext.getWorkflow());
+		workflowRepository.save(workflowContext.getWorkflow());
+		stateChangeRepository.save(stateChange);
 		
 		Execution operation = currentStateActionCtx.operation();
 		if (Objects.nonNull(operation)) {

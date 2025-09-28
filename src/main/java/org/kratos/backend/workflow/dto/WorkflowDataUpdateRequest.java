@@ -5,7 +5,8 @@ import java.util.UUID;
 
 public record WorkflowDataUpdateRequest(
 		UUID id,
-		Map<String, Object> data
+		Map<String, Object> data,
+		Map<String, Object> diff
 ) {
 	
 }

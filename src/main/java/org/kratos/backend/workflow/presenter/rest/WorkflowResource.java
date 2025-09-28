@@ -32,19 +32,20 @@ public class WorkflowResource {
 	}
 	
 	@PostMapping ("/update/state")
-	public Response<WorkflowResponse> updateState(@RequestHeader ("X-Subject") UUID wfConfigId,
+	public Response<WorkflowResponse> updateState(@AuthenticationPrincipal Jwt user,
 	                                              @Valid @RequestBody Request<WorkflowUpdateRequest> workflowUpdateRequest) {
 		return Response.<WorkflowResponse>builder()
-		               .data(workflowService.updateState(workflowUpdateRequest.data()))
+		               .data(workflowService.updateState(workflowUpdateRequest.data(),
+		                                                 user.getSubject()))
 		               .status(ResponseStatus.ALL_OK)
 		               .build();
 	}
 	
 	@PostMapping ("/update/data")
-	public Response<WorkflowResponse> updateData(@RequestHeader ("X-Subject") UUID wfConfigId,
+	public Response<WorkflowResponse> updateData(@AuthenticationPrincipal Jwt user,
 	                                             @Valid @RequestBody Request<WorkflowDataUpdateRequest> wfDataRequest) {
 		return Response.<WorkflowResponse>builder()
-		               .data(workflowService.updateData(wfDataRequest.data()))
+		               .data(workflowService.updateData(wfDataRequest.data(), user.getSubject()))
 		               .status(ResponseStatus.ALL_OK)
 		               .build();
 	}
@@ -60,7 +61,8 @@ public class WorkflowResource {
 	@PostMapping ("/get/all")
 	public Response<List<WorkflowResponse>> getAll(@RequestHeader ("X-Subject") UUID wfConfigId,
 	                                               @Valid @RequestBody PaginatedRequest<Void> request) {
-		PaginatedResponse<List<WorkflowResponse>> allWorkflows = workflowService.getAll(wfConfigId, request.pagination());
+		PaginatedResponse<List<WorkflowResponse>> allWorkflows = workflowService.getAll(wfConfigId,
+		                                                                                request.pagination());
 		return Response.<List<WorkflowResponse>>builder()
 		               .data(allWorkflows.data())
 		               .pagination(allWorkflows.pagination())

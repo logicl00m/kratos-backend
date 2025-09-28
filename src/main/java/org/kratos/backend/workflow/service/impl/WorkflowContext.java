@@ -19,7 +19,7 @@ public class WorkflowContext {
 	private final Workflow workflow;
 	
 	@Transactional
-	public void transition(String action) {
+	public void transition(String action, String userId) {
 		State currentStateCtx = this.getCurrentState();
 		do {
 			var stateHandler = currentStateCtx.kind()
@@ -29,7 +29,7 @@ public class WorkflowContext {
 				                   .responseStatus(ResponseStatus.WF_STATE_HANDLER_NOT_DEFINED)
 				                   .build();
 			}
-			stateHandler.transition(this, action);
+			stateHandler.transition(this, action, userId);
 			currentStateCtx = this.getCurrentState();
 		} while (Objects.nonNull(currentStateCtx) && !currentStateCtx.kind().requiresExternalIntervention);
 	}

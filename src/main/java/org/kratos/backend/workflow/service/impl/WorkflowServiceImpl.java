@@ -7,7 +7,9 @@ import org.kratos.backend.common.dtos.PaginationRequest;
 import org.kratos.backend.common.dtos.PaginationResponse;
 import org.kratos.backend.common.exceptions.BaseException;
 import org.kratos.backend.configuration.service.WorkflowConfigurationService;
+import org.kratos.backend.workflow.data.entities.DataChange;
 import org.kratos.backend.workflow.data.entities.Workflow;
+import org.kratos.backend.workflow.data.repositories.DataChangeRepository;
 import org.kratos.backend.workflow.data.repositories.WorkflowRepository;
 import org.kratos.backend.workflow.dto.WorkflowDataUpdateRequest;
 import org.kratos.backend.workflow.dto.WorkflowResponse;
@@ -31,6 +33,7 @@ public class WorkflowServiceImpl implements WorkflowService {
 	
 	private final WorkflowRepository workflowRepository;
 	private final WorkflowConfigurationService wfConfigService;
+	private final DataChangeRepository dataChangeRepository;
 	private final WorkflowMapper wfMapper;
 	
 	@Override
@@ -47,21 +50,23 @@ public class WorkflowServiceImpl implements WorkflowService {
 	}
 	
 	@Override
-	public WorkflowResponse updateState(WorkflowUpdateRequest request) {
+	public WorkflowResponse updateState(WorkflowUpdateRequest request, String userId) {
 		var workflow = getEntity(request.id());
 		var workflowContext = WorkflowContext.builder()
 		                                     .workflow(workflow)
 		                                     .build();
-		workflowContext.transition(request.action());
+		workflowContext.transition(request.action(), userId);
 		return wfMapper.toDto(workflow);
 	}
 	
 	@Override
 	@Transactional
-	public WorkflowResponse updateData(WorkflowDataUpdateRequest request) {
+	public WorkflowResponse updateData(WorkflowDataUpdateRequest request, String userId) {
 		var workflow = getEntity(request.id());
 		workflow.setData(request.data());
-		workflowRepository.saveAndFlush(workflow);
+		workflowRepository.save(workflow);
+		DataChange dataChange = wfMapper.dataChange(request, workflow, userId);
+		dataChangeRepository.save(dataChange);
 		return wfMapper.toDto(workflow);
 	}
 	
@@ -77,7 +82,6 @@ public class WorkflowServiceImpl implements WorkflowService {
 		                                                         .responseStatus(WF_NOT_FOUND)
 		                                                         .build());
 	}
-	
 	
 	@Override
 	public PaginatedResponse<List<WorkflowResponse>> getAll(UUID wfConfigId, PaginationRequest page) {

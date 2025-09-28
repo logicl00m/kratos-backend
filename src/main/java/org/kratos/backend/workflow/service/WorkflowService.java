@@ -14,9 +14,9 @@ public interface WorkflowService {
 	
 	WorkflowResponse create(UUID wfConfigId, String subject);
 	
-	WorkflowResponse updateState(WorkflowUpdateRequest workflowUpdateRequest);
+	WorkflowResponse updateState(WorkflowUpdateRequest workflowUpdateRequest, String userId);
 	
-	WorkflowResponse updateData(WorkflowDataUpdateRequest data);
+	WorkflowResponse updateData(WorkflowDataUpdateRequest data, String userId);
 	
 	WorkflowResponse get(UUID workflowId);
 	
