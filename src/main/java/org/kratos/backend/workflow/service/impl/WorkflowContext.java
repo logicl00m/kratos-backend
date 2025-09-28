@@ -31,7 +31,7 @@ public class WorkflowContext {
 			}
 			stateHandler.transition(this, action);
 			currentStateCtx = this.getCurrentState();
-		} while (!currentStateCtx.kind().requiresExternalIntervention);
+		} while (Objects.nonNull(currentStateCtx) && !currentStateCtx.kind().requiresExternalIntervention);
 	}
 	
 	public State getCurrentState() {
