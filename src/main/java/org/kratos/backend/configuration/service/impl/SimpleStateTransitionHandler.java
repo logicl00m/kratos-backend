@@ -11,6 +11,8 @@ import org.kratos.backend.workflow.data.repositories.WorkflowRepository;
 import org.kratos.backend.workflow.service.impl.WorkflowContext;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
+
 @Service
 @RequiredArgsConstructor
 public class SimpleStateTransitionHandler implements StateTransitionHandler {
@@ -32,24 +34,27 @@ public class SimpleStateTransitionHandler implements StateTransitionHandler {
 		}
 		
 		Execution validation = currentStateActionCtx.validation();
-		boolean validated = validation
-				.kind()
-				.getHandler()
-				.validate(workflowContext, validation.spec());
-		
-		if (!validated) {
-			throw BaseException.builder()
-			                   .responseStatus(ResponseStatus.ACTION_VALIDATION_FAILED)
-			                   .build();
+		if (Objects.nonNull(validation)) {
+			boolean validated = validation
+					.kind()
+					.getHandler()
+					.validate(workflowContext, validation.spec());
+			
+			if (!validated) {
+				throw BaseException.builder()
+				                   .responseStatus(ResponseStatus.ACTION_VALIDATION_FAILED)
+				                   .build();
+			}
 		}
-		
 		workflowContext.getWorkflow()
 		               .setState(currentStateActionCtx.nextState());
 		workflowRepository.saveAndFlush(workflowContext.getWorkflow());
 		
 		Execution operation = currentStateActionCtx.operation();
-		operation.kind()
-		         .getHandler()
-		         .execute(workflowContext, operation.spec());
+		if (Objects.nonNull(operation)) {
+			operation.kind()
+			         .getHandler()
+			         .execute(workflowContext, operation.spec());
+		}
 	}
 }
