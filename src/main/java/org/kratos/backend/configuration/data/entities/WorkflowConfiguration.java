@@ -10,7 +10,7 @@ import lombok.Setter;
 import org.hibernate.annotations.*;
 import org.hibernate.generator.EventType;
 import org.hibernate.type.SqlTypes;
-import org.kratos.backend.configuration.dto.ParsedWorkflowConfiguration;
+import org.kratos.backend.configuration.dto.WorkflowConfigurationContext;
 
 import java.time.ZonedDateTime;
 import java.util.Map;
@@ -59,8 +59,8 @@ public class WorkflowConfiguration {
 	private Boolean isDeleted = false;
 	
 	@Transient
-	public ParsedWorkflowConfiguration parsed() {
-		return new ObjectMapper().convertValue(config, ParsedWorkflowConfiguration.class);
+	public WorkflowConfigurationContext context() {
+		return new ObjectMapper().convertValue(config, WorkflowConfigurationContext.class);
 	}
 	
 }

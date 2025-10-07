@@ -1,7 +1,7 @@
 package org.kratos.backend.workflow.service;
 
-import jakarta.validation.Valid;
 import org.kratos.backend.common.dtos.PaginatedResponse;
+import org.kratos.backend.common.dtos.PaginationRequest;
 import org.kratos.backend.workflow.data.entities.Workflow;
 import org.kratos.backend.workflow.dto.WorkflowDataUpdateRequest;
 import org.kratos.backend.workflow.dto.WorkflowResponse;
@@ -14,14 +14,13 @@ public interface WorkflowService {
 	
 	WorkflowResponse create(UUID wfConfigId, String subject);
 	
-	WorkflowResponse update(@Valid WorkflowUpdateRequest workflowUpdateRequest);
+	WorkflowResponse updateState(WorkflowUpdateRequest workflowUpdateRequest, String userId);
 	
-	WorkflowResponse updateData(@Valid WorkflowDataUpdateRequest data);
+	WorkflowResponse updateData(WorkflowDataUpdateRequest data, String userId);
 	
-	WorkflowResponse get(@Valid UUID workflowId);
+	WorkflowResponse get(UUID workflowId);
 	
 	Workflow getEntity(UUID workflowId);
 	
-	List<WorkflowResponse> getAll();
-
+	PaginatedResponse<List<WorkflowResponse>> getAll(UUID wfConfigId, PaginationRequest pagination);
 }

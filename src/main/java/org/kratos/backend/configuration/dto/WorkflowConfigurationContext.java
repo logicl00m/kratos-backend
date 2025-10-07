@@ -1,27 +1,31 @@
 package org.kratos.backend.configuration.dto;
 
-
-import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import org.kratos.backend.configuration.service.Executor;
+import org.kratos.backend.configuration.service.StateTransitionHandler;
 
 import java.util.List;
 import java.util.Map;
 
-/**
- * Root record for workflow configuration.
- */
-public record ParsedWorkflowConfiguration(
+public record WorkflowConfigurationContext(
 		@JsonProperty ("id") String id,
 		@JsonProperty ("version") String version,
+		@JsonProperty ("initialState") String initialState,
 		@JsonProperty ("forms") Map<String, Form> forms,
-		@JsonProperty ("states") States states,
+		@JsonProperty ("states") Map<String, State> states,
 		@JsonProperty ("scripts") Map<String, Script> scripts
 ) {
 	
-	public record Script() {
-		// Empty object per schema (but could be extended in future)
+	public record Script(
+			@JsonProperty ("name") String name,
+			@JsonProperty ("runtime") String runtime,
+			@JsonProperty ("code") String code
+	) {
+	
 	}
 	
 	public record Form(
@@ -53,10 +57,6 @@ public record ParsedWorkflowConfiguration(
 			@JsonProperty ("number") NUMBER
 		}
 		
-		/**
-		 * Marker interface for spec types.
-		 * Jackson can be configured with polymorphic deserialization based on 'kind'.
-		 */
 		public sealed interface Spec permits TextFieldSpec, NumberFieldSpec {
 		
 		}
@@ -76,13 +76,6 @@ public record ParsedWorkflowConfiguration(
 		}
 	}
 	
-	public record States(
-			@JsonProperty ("initialState") String initialState,
-			@JsonAnySetter Map<String, State> states
-	) {
-	
-	}
-	
 	public record State(
 			@JsonProperty ("name") String name,
 			@JsonProperty ("kind") Kind kind,
@@ -98,15 +91,21 @@ public record ParsedWorkflowConfiguration(
 			Spec spec
 	) {
 		
+		@RequiredArgsConstructor
 		public enum Kind {
-			@JsonProperty ("simple") SIMPLE,
-			@JsonProperty ("switch") SWITCH,
-			@JsonProperty ("allOf") ALL_OF,
-			@JsonProperty ("anyOf") ANY_OF,
-			@JsonProperty ("doWhile") DO_WHILE
+			@JsonProperty ("simple") SIMPLE(true),
+			@JsonProperty ("switch") SWITCH(false),
+			@JsonProperty ("allOf") ALL_OF(true),
+			@JsonProperty ("anyOf") ANY_OF(true),
+			@JsonProperty ("doWhile") DO_WHILE(true);
+			
+			public final boolean requiresExternalIntervention;
+			
+			@Getter
+			StateTransitionHandler handler;
 		}
 		
-		public sealed interface Spec permits SimpleStateSpec, SwitchStateSpec {
+		public interface Spec {
 		
 		}
 		
@@ -121,21 +120,63 @@ public record ParsedWorkflowConfiguration(
 		
 		}
 		
+		public interface ExecutionSpec {
+		
+		}
+		
+		@Getter
+		public enum Executors {
+			@JsonProperty ("inline") INLINE,
+			@JsonProperty ("script") SCRIPT;
+			
+			Executor handler;
+		}
+		
+		public record Execution(
+				@JsonProperty ("kind") Executors kind,
+				
+				@JsonTypeInfo (
+						use = JsonTypeInfo.Id.NAME,
+						include = JsonTypeInfo.As.EXTERNAL_PROPERTY,
+						property = "kind"
+				)
+				@JsonSubTypes ({
+						@JsonSubTypes.Type (value = InlineExecutionSpec.class, name = "inline"),
+						@JsonSubTypes.Type (value = ScriptExecutionSpec.class, name = "script")
+				})
+				ExecutionSpec spec
+		) {
+		
+		}
+		
 		public record SimpleActionSpec(
 				@JsonProperty ("name") String name,
 				@JsonProperty ("nextState") String nextState,
-				@JsonProperty ("validation") String validation,
-				@JsonProperty ("operation") String operation
+				@JsonProperty ("validation") Execution validation,
+				@JsonProperty ("operation") Execution operation
 		) {
 		
 		}
 		
 		public record SwitchStateSpec(
-				@JsonProperty ("expression") String expression,
-				@JsonProperty ("operation") String operation
-		) implements Spec {
+				@JsonProperty ("expression") Execution expression,
+				@JsonProperty ("operation") Execution operation
+		) {
+		
+		}
+		
+		public record InlineExecutionSpec(
+				@JsonProperty ("runtime") String runtime,
+				@JsonProperty ("code") String code
+		) implements ExecutionSpec {
+		
+		}
+		
+		public record ScriptExecutionSpec(
+				@JsonProperty ("script") String script,
+				@JsonProperty ("function") String function
+		) implements ExecutionSpec {
 		
 		}
 	}
 }
-

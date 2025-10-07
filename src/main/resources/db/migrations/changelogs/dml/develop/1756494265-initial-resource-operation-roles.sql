@@ -106,3 +106,16 @@ insert into kratos.resource_roles(app_role_id, resource_operation_id)
 values ((select id from kratos.app_roles where app_role = 'WORKFLOW_ADMIN' and is_predefined),
         (select id from kratos.resource_operations where resource = 'workflow' and operation = 'get'))
 on conflict (app_role_id, resource_operation_id) do nothing;
+
+-- changeset Noman5237:1756494265-17
+-- permission get
+insert into kratos.resource_operations(resource, operation, display_name, display_description)
+values ('permission', 'get', 'get permission', 'user will have permission to get the permissions of configuration')
+on conflict (resource, operation) do nothing;
+
+-- changeset Noman5237:1756494265-18
+-- workflow admin can get workflow by configuration
+insert into kratos.resource_roles(app_role_id, resource_operation_id)
+values ((select id from kratos.app_roles where app_role = 'WORKFLOW_ADMIN' and is_predefined),
+        (select id from kratos.resource_operations where resource = 'permission' and operation = 'get'))
+on conflict (app_role_id, resource_operation_id) do nothing;

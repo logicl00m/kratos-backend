@@ -1,6 +1,5 @@
 package org.kratos.backend.form.data.entities;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -11,7 +10,6 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.generator.EventType;
 import org.hibernate.type.SqlTypes;
-import org.kratos.backend.configuration.dto.ParsedWorkflowConfiguration;
 
 import java.time.ZonedDateTime;
 import java.util.Map;
@@ -20,12 +18,17 @@ import java.util.UUID;
 @Getter
 @Setter
 @Entity
-@Table (name = "form")
+@Table (name = "forms")
 public class Form {
     @Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "id", nullable = false)
 	private UUID id;
+	
+	@Size(max = 255)
+	@NotNull
+	@Column (name = "name", nullable = false)
+	private String name;
 
 	@NotNull
 	@Column (name = "config", nullable = false)
@@ -58,8 +61,4 @@ public class Form {
 	@Column (name = "is_deleted", nullable = false)
 	private Boolean isDeleted = false;
 
-	@Transient
-	public ParsedWorkflowConfiguration parsed() {
-		return new ObjectMapper().convertValue(config, ParsedWorkflowConfiguration.class);
-	}
 }

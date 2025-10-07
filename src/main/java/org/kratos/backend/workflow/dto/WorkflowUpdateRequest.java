@@ -1,5 +1,10 @@
 package org.kratos.backend.workflow.dto;
 
-public class WorkflowUpdateRequest {
+import java.util.UUID;
+
+public record WorkflowUpdateRequest(
+		UUID id,
+		String action
+) {
 
 }

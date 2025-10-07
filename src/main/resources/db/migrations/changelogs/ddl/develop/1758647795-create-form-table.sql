@@ -1,10 +1,11 @@
 -- liquibase formatted sql
 
 -- changeset Abbiirr:1758647795-1
--- form table (same structure as workflow_configurations)
-create table if not exists kratos.form
+-- form table
+create table if not exists kratos.forms
 (
     id         uuid                  default uuid_generate_v4() not null primary key,
+    name       varchar(255) not null,
     config     jsonb        not null,
 
     created_by varchar(255) not null,

@@ -2,15 +2,24 @@ package org.kratos.backend.workflow.service.impl;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.kratos.backend.common.dtos.PaginatedResponse;
+import org.kratos.backend.common.dtos.PaginationRequest;
+import org.kratos.backend.common.dtos.PaginationResponse;
 import org.kratos.backend.common.exceptions.BaseException;
 import org.kratos.backend.configuration.service.WorkflowConfigurationService;
+import org.kratos.backend.workflow.data.entities.DataChange;
 import org.kratos.backend.workflow.data.entities.Workflow;
+import org.kratos.backend.workflow.data.repositories.DataChangeRepository;
 import org.kratos.backend.workflow.data.repositories.WorkflowRepository;
 import org.kratos.backend.workflow.dto.WorkflowDataUpdateRequest;
 import org.kratos.backend.workflow.dto.WorkflowResponse;
 import org.kratos.backend.workflow.dto.WorkflowUpdateRequest;
+import org.kratos.backend.workflow.mapper.ChangeMapper;
 import org.kratos.backend.workflow.mapper.WorkflowMapper;
 import org.kratos.backend.workflow.service.WorkflowService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -22,59 +31,65 @@ import static org.kratos.backend.common.constants.ResponseStatus.WF_NOT_FOUND;
 @Service
 @RequiredArgsConstructor
 public class WorkflowServiceImpl implements WorkflowService {
-
-    private final WorkflowRepository workflowRepository;
-    private final WorkflowConfigurationService wfConfigService;
-    private final WorkflowMapper wfMapper;
-
-    @Override
-    @Transactional
-    public WorkflowResponse create(UUID wfConfigId, String subject) {
-        var wfConfig = wfConfigService.getEntity(wfConfigId);
-        Workflow workflow = new Workflow();
-        workflow.setData(new HashMap<>());
-        workflow.setWfConfig(wfConfig);
-        workflow.setState(wfConfig.parsed()
-                .states()
-                .initialState());
-        workflowRepository.saveAndFlush(workflow);
-        return wfMapper.toDto(workflow);
-    }
-
-    @Override
-    public WorkflowResponse update(WorkflowUpdateRequest workflowUpdateRequest) {
-        return null;
-    }
-
-    @Override
-    @Transactional
-    public WorkflowResponse updateData(WorkflowDataUpdateRequest request) {
-        var workflow = getEntity(request.id());
-        workflow.setData(request.data());
-        workflowRepository.saveAndFlush(workflow);
-        return wfMapper.toDto(workflow);
-    }
-
-    @Override
-    public WorkflowResponse get(UUID workflowId) {
-        return null;
-    }
-
-    @Override
-    public Workflow getEntity(UUID workflowId) {
-        return workflowRepository.findById(workflowId)
-                .orElseThrow(() -> BaseException.builder()
-                        .responseStatus(WF_NOT_FOUND)
-                        .build());
-    }
-
-
-    @Override
-    public List<WorkflowResponse> getAll() {
-        var workflows = workflowRepository.findAll();
-        return workflows.stream()
-                .map(wfMapper::toDto)
-                .toList();
-
-    }
+	
+	private final WorkflowRepository workflowRepository;
+	private final WorkflowConfigurationService wfConfigService;
+	private final DataChangeRepository dataChangeRepository;
+	private final WorkflowMapper wfMapper;
+	private final ChangeMapper changeMapper;
+	
+	@Override
+	@Transactional
+	public WorkflowResponse create(UUID wfConfigId, String subject) {
+		var wfConfig = wfConfigService.getEntity(wfConfigId);
+		Workflow workflow = new Workflow();
+		workflow.setData(new HashMap<>());
+		workflow.setWfConfig(wfConfig);
+		workflow.setState(wfConfig.context()
+		                          .initialState());
+		workflowRepository.saveAndFlush(workflow);
+		return wfMapper.toDto(workflow);
+	}
+	
+	@Override
+	public WorkflowResponse updateState(WorkflowUpdateRequest request, String userId) {
+		var workflow = getEntity(request.id());
+		var workflowContext = WorkflowContext.builder()
+		                                     .workflow(workflow)
+		                                     .build();
+		workflowContext.transition(request.action(), userId);
+		return wfMapper.toDto(workflow);
+	}
+	
+	@Override
+	@Transactional
+	public WorkflowResponse updateData(WorkflowDataUpdateRequest request, String userId) {
+		var workflow = getEntity(request.id());
+		workflow.setData(request.data());
+		workflowRepository.save(workflow);
+		DataChange dataChange = changeMapper.dataChange(request, workflow, userId);
+		dataChangeRepository.save(dataChange);
+		return wfMapper.toDto(workflow);
+	}
+	
+	@Override
+	public WorkflowResponse get(UUID workflowId) {
+		return wfMapper.toDto(getEntity(workflowId));
+	}
+	
+	@Override
+	public Workflow getEntity(UUID workflowId) {
+		return workflowRepository.findById(workflowId)
+		                         .orElseThrow(() -> BaseException.builder()
+		                                                         .responseStatus(WF_NOT_FOUND)
+		                                                         .build());
+	}
+	
+	@Override
+	public PaginatedResponse<List<WorkflowResponse>> getAll(UUID wfConfigId, PaginationRequest page) {
+		Pageable pageable = PageRequest.of(page.number(), page.size());
+		Page<Workflow> workflows = workflowRepository.findAllByWfConfig_Id(wfConfigId, pageable);
+		return new PaginatedResponse<>(wfMapper.toResponseList(workflows.getContent()),
+		                               new PaginationResponse(workflows));
+	}
 }

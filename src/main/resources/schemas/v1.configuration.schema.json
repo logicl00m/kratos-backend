@@ -12,6 +12,9 @@
       "type": "string",
       "description": "version of the workflow"
     },
+    "initialState": {
+      "type": "string"
+    },
     "forms": {
       "description": "forms to be used in the workflow",
       "type": "object",
@@ -22,18 +25,10 @@
     "states": {
       "description": "states in the workflow",
       "type": "object",
-      "properties": {
-        "initialState": {
-          "type": "string"
-        }
-      },
       "additionalProperties": {
         "$ref": "#/$defs/state"
       },
-      "minProperties": 2,
-      "required": [
-        "initialState"
-      ]
+      "minProperties": 1
     },
     "scripts": {
       "description": "scripts in the workflow",
@@ -46,7 +41,8 @@
   "additionalProperties": false,
   "required": [
     "id",
-    "version"
+    "version",
+    "initialState"
   ],
   "$defs": {
     "script": {
@@ -54,7 +50,20 @@
       "type": "object",
       "description": "schema to define script",
       "properties": {
-      }
+        "name": {
+          "type": "string"
+        },
+        "runtime": {
+          "type": "string"
+        },
+        "code": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "code"
+      ],
+      "additionalProperties": false
     },
     "form": {
       "title": "form",
@@ -109,6 +118,87 @@
         "placeholder"
       ]
     },
+    "execution": {
+      "title": "execution",
+      "type": "object",
+      "description": "inline code or reusable script reference",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "inline",
+            "script"
+          ]
+        },
+        "spec": {
+          "type": "object"
+        }
+      },
+      "required": [
+        "kind",
+        "spec"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "inline"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "spec": {
+                "type": "object",
+                "properties": {
+                  "runtime": {
+                    "type": "string"
+                  },
+                  "code": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "code",
+                  "runtime"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "script"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "spec": {
+                "type": "object",
+                "properties": {
+                  "script": {
+                    "type": "string"
+                  },
+                  "function": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "script"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        }
+      ]
+    },
     "simple.action.spec": {
       "title": "action",
       "type": "object",
@@ -121,10 +211,10 @@
           "type": "string"
         },
         "validation": {
-          "type": "string"
+          "$ref": "#/$defs/execution"
         },
         "operation": {
-          "type": "string"
+          "$ref": "#/$defs/execution"
         }
       },
       "required": [
@@ -176,10 +266,10 @@
       "description": "schema to define switch state",
       "properties": {
         "expression": {
-          "type": "string"
+          "$ref": "#/$defs/execution"
         },
         "operation": {
-          "type": "string"
+          "$ref": "#/$defs/execution"
         }
       },
       "required": [
