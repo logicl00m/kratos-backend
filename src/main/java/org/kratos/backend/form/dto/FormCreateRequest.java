@@ -1,6 +1,10 @@
 package org.kratos.backend.form.dto;
 
-// fixme(high): add form create config validation
-public record FormCreateRequest(String name, java.util.Map<String, Object> config) {
+import java.util.Map;
+
+public record FormCreateRequest(@com.fasterxml.jackson.annotation.JsonProperty("formJson")
+                                Map<String,Object> formJson) {}
+
+
 
 }
