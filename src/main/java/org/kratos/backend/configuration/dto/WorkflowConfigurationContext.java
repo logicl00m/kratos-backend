@@ -15,7 +15,7 @@ public record WorkflowConfigurationContext(
 		@JsonProperty ("id") String id,
 		@JsonProperty ("version") String version,
 		@JsonProperty ("initialState") String initialState,
-		@JsonProperty ("forms") Map<String, Form> forms,
+		@JsonProperty ("forms") Map<String, Object> forms,
 		@JsonProperty ("states") Map<String, State> states,
 		@JsonProperty ("scripts") Map<String, Script> scripts
 ) {
@@ -26,54 +26,6 @@ public record WorkflowConfigurationContext(
 			@JsonProperty ("code") String code
 	) {
 	
-	}
-	
-	public record Form(
-			@JsonProperty ("fields") Map<String, Field> fields
-	) {
-	
-	}
-	
-	public record Field(
-			@JsonProperty ("name") String name,
-			@JsonProperty ("data") String data,
-			@JsonProperty ("actions") List<String> actions,
-			@JsonProperty ("kind") Kind kind,
-			
-			@JsonTypeInfo (
-					use = JsonTypeInfo.Id.NAME,
-					include = JsonTypeInfo.As.EXTERNAL_PROPERTY,
-					property = "kind"
-			)
-			@JsonSubTypes ({
-					@JsonSubTypes.Type (value = TextFieldSpec.class, name = "text"),
-					@JsonSubTypes.Type (value = NumberFieldSpec.class, name = "number")
-			})
-			Spec spec
-	) {
-		
-		public enum Kind {
-			@JsonProperty ("text") TEXT,
-			@JsonProperty ("number") NUMBER
-		}
-		
-		public sealed interface Spec permits TextFieldSpec, NumberFieldSpec {
-		
-		}
-		
-		public record TextFieldSpec(
-				@JsonProperty ("placeholder") String placeholder
-		) implements Spec {
-		
-		}
-		
-		public record NumberFieldSpec(
-				@JsonProperty ("placeholder") String placeholder,
-				@JsonProperty ("min") Double min,
-				@JsonProperty ("max") Double max
-		) implements Spec {
-		
-		}
 	}
 	
 	public record State(
@@ -160,7 +112,8 @@ public record WorkflowConfigurationContext(
 		
 		public record SwitchStateSpec(
 				@JsonProperty ("expression") Execution expression,
-				@JsonProperty ("operation") Execution operation
+				@JsonProperty ("operation") Execution operation,
+				@JsonProperty ("nextStates") List<String> nextStates
 		) {
 		
 		}
